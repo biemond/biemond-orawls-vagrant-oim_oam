@@ -58,14 +58,15 @@ domain_user_key_file:       "/home/oracle/oracle-oimDomain-WebLogicKey.propertie
 # create a standard domain
 domain_instances:
   'oimDomain':
-     version:                  1122
-     domain_template:          "oim"
-     development_mode:         true
-     log_output:               *logoutput
-     repository_database_url:  "jdbc:oracle:thin:@oimdb.example.com:1521/oimrepos.example.com"
-     repository_prefix:        "DEV"
-     repository_password:      "Welcome01"
-
+    version:                  1122
+    domain_template:          "oim"
+    development_mode:         true
+    log_output:               *logoutput
+    repository_database_url:  "jdbc:oracle:thin:@oimdb.example.com:1521/oimrepos.example.com"
+    repository_prefix:        "DEV"
+    repository_password:      "Welcome01"
+    repository_sys_password:  "Welcome01"
+    rcu_database_url:         "oimdb.example.com:1521/oimrepos.example.com"
 
 # create and startup the nodemanager
 nodemanager_instances:
@@ -120,24 +121,24 @@ userconfig_instances:
      log_output:           *logoutput
      user_config_dir:      '/home/oracle'
 
-# oimconfig_instances:
-#   'oimDomain':
-#     version:                    '1122'
-#     oim_home:                   '/opt/oracle/middleware11g/Oracle_IDM1'
-#     server_config:              true
-#     oim_password:               'Welcome01'
-#     remote_config:              false
-#     keystore_password:          'Welcome01'
-#     design_config:              false
-#     oimserver_hostname:         'oim1admin.example.com'
-#     oimserver_port:             '14000'
-#     repository_database_url:    "oimdb.example.com:1521:oimrepos.example.com"
-#     repository_prefix:          "DEV"
-#     repository_password:        "Welcome01"
+oimconfig_instances:
+  'oimDomain':
+    version:                    '1122'
+    oim_home:                   '/opt/oracle/middleware11g/Oracle_IDM1'
+    server_config:              true
+    oim_password:               'Welcome01'
+    remote_config:              false
+    keystore_password:          'Welcome01'
+    design_config:              false
+    oimserver_hostname:         'oim1admin.example.com'
+    oimserver_port:             '14000'
+    repository_database_url:    "oimdb.example.com:1521:oimrepos.example.com"
+    repository_prefix:          "DEV"
+    repository_password:        "Welcome01"
 
-# webtier_instances:
-#   'ohs1':
-#     action_name:           'create'
-#     instance_name:         'ohs1'
-#     log_output:            *logoutput
+webtier_instances:
+  'ohs1':
+    action_name:           'create'
+    instance_name:         'ohs1'
+    log_output:            *logoutput
 
