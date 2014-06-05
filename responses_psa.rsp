@@ -1,0 +1,58 @@
+#
+#  cd /opt/oracle/middleware11g/oracle_common/bin
+#  ./psa -response /vagrant/responses_psa.rsp
+#
+# This is a response file for the Fusion Middleware Patch Set Assistant.
+# Individual component upgrades are performed in the order they are described here.
+# Each upgrade is introduced by a section header containing the name of the
+# component and name of the upgrade plugin. The form of the section header is
+# [ComponentName.PluginName]
+# These names can be found in the Upgrade Descriptor files for the components.
+
+# Individual input lines consist of a name, an equal sign, and a value.
+# The name is in two parts separated by a period.  The first part is the 'name'
+# attribute from the Descriptor File XML tag by which the plugin refers to the value.
+# The second part of the name identifies a field within that value.  Some input
+# types have only one field, while other types can have half a dozen.   Do not
+# intermix input lines that apply to different XML tags.
+
+[GENERAL]
+# This is the file format version number.  Do not change the next line.
+fileFormatVersion = 3
+
+
+# The next section contains the information for performing a schema
+# upgrade on Oracle Platform Security Services, as described in the Upgrade
+# Descriptor file located at
+#   /opt/oracle/middleware11g/oracle_common/upgrade/components/opss.xml
+# Do not change the next line.
+[OPSS.OPSS1]
+# The following number uniquely identifies this instance of an
+# upgrade plugin.  Do not change it.
+pluginInstance = 4
+
+# The next few lines describe a database connection.
+#  "Specify the database containing the OPSS schema."
+# Specifies the type of database.  Supported types for this product are
+#   Oracle Database, Oracle Database enabled for edition-based redefinition
+OPSS.databaseType = Oracle Database
+# Specifies the database connection string for the DBA user.
+# The format depends upon the database type.
+OPSS.databaseConnectionString = 10.10.10.9:1521/oimrepos.example.com
+# Specifies the database connection string for the user schema.
+# The format depends upon the database type.
+OPSS.schemaConnectionString = 10.10.10.9:1521/oimrepos.example.com
+# Specifies the name of the schema or database user
+OPSS.schemaUserName = DEV_OPSS
+# Specifies the password for the schema, in encrypted form.  To specify a
+# different password in cleartext, use the "cleartextSchemaPassword" keyword instead:
+OPSS.cleartextSchemaPassword = Welcome01
+#OPSS.encryptedSchemaPassword = 05E4840640794436E8398347AE56AB1773800D76BD57725AC0
+# Specifies the name of the database administrator account.
+OPSS.dbaUserName = sys as sysdba
+# Specifies the password for the database administrator account, in encrypted form.
+# To specify a different password in cleartext, use the "cleartextDbaPassword" keyword
+# instead:
+OPSS.cleartextDbaPassword = Welcome01
+#OPSS.encryptedDbaPassword = 05D2C71FC00196168F56F367AF83A29FAD60184A83AEC765BB
+
