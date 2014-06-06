@@ -1,4 +1,8 @@
-#OIM/OAM vagrant box
+#OIM/OAM with WebTier/WebGate vagrant box
+
+##Todo
+2.6.1 Registering the New Oracle HTTP Server 11g WebGate http://docs.oracle.com/cd/E40329_01/doc.1112/e49451/webgate_ohs.htm#autoId14
+
 
 ##Details
 - CentOS 6.5 vagrant box
@@ -26,12 +30,10 @@ Vagrant boxes
 - OPatch upgrade p6880880_112000_Linux-x86-64.zip
 - RCU ofm_rcu_linux_11.1.2.2.0_64_disk1_1of1.zip
 
-
 ## Middleware
 
 ### WebLogic Server
 - oim1admin 10.10.10.61, WebLogic 10.3.6 met OIM,OAM,SOA Suite 
-
 
 ##Software
 
@@ -49,6 +51,7 @@ Vagrant boxes
 - ofm_iam_generic_11.1.2.2.0_disk1_1of2.zip
 - ofm_iam_generic_11.1.2.2.0_disk1_2of2.zip
 - ofm_webtier_linux_11.1.1.7.0_64_disk1_1of1.zip
+- ofm_webgates_generic_11.1.2.2.0_disk1_1of1.zip
 - ofm_soa_generic_11.1.1.7.0_disk1_1of2.zip
 - ofm_soa_generic_11.1.1.7.0_disk1_2of2.zip
 

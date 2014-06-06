@@ -23,6 +23,12 @@ fmw_installations:
     fmw_file2:               "ofm_iam_generic_11.1.2.2.0_disk1_2of2.zip"
     log_output:              true
     remote_file:             false
+  'webGate11.1.2.2':
+    version:                 1112
+    fmw_product:             "webgate"
+    fmw_file1:               "ofm_webgates_generic_11.1.2.2.0_disk1_1of1.zip"
+    log_output:              true
+    remote_file:             false
   'webTierPS6':
     fmw_product:             "web"
     fmw_file1:               "ofm_webtier_linux_11.1.1.7.0_64_disk1_1of1.zip"
@@ -120,31 +126,25 @@ userconfig_instances:
      log_output:           *logoutput
      user_config_dir:      '/home/oracle'
 
-# USER=oracle
-# USERNAME=oracle
-# LANG=en_US.UTF-8
-# HOME=/home/oracle
-# LOGNAME=oracle
-
-
 oimconfig_instances:
   'oimDomain':
     version:                    1112
     oim_home:                   '/opt/oracle/middleware11g/Oracle_IDM1'
     server_config:              true
     oim_password:               'Welcome01'
-    remote_config:              true
+    remote_config:              false
     keystore_password:          'Welcome01'
-    design_config:              true
+    design_config:              false
     oimserver_hostname:         'oim1admin.example.com'
     oimserver_port:             '14000'
     repository_database_url:    "oimdb.example.com:1521:oimrepos.example.com"
     repository_prefix:          "DEV"
     repository_password:        "Welcome01"
 
-# webtier_instances:
-#   'ohs1':
-#     action_name:           'create'
-#     instance_name:         'ohs1'
-#     log_output:            *logoutput
+webtier_instances:
+  'ohs1':
+    action_name:           'create'
+    webgate_configure:     true
+    instance_name:         'ohs1'
+    log_output:            *logoutput
 
