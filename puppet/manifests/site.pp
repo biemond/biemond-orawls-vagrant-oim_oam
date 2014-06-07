@@ -1,4 +1,4 @@
-node 'oim1admin.example.com' {
+node 'oim1admin.example.com', 'oimoud.example.com' {
 
   include os
   include java

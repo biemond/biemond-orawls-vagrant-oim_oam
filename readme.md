@@ -15,10 +15,12 @@ Add the all the Oracle binaries to /software
 edit Vagrantfile and update the software share
 - oim1admin.vm.synced_folder "/Users/edwin/software", "/software"
 - oimdb.vm.synced_folder "/Users/edwin/software", "/software"
+- oimoud.vm.synced_folder "/Users/edwin/software", "/software"
 
 Vagrant boxes
 - vagrant up oimdb
 - vagrant up oim1admin
+- vagrant up oimoud
 
 ## Databases
 - oimdb 10.10.10.9, 11.2.0.4 met OIM/OAM RCU
@@ -54,6 +56,8 @@ Vagrant boxes
 - ofm_webgates_generic_11.1.2.2.0_disk1_1of1.zip
 - ofm_soa_generic_11.1.1.7.0_disk1_1of2.zip
 - ofm_soa_generic_11.1.1.7.0_disk1_2of2.zip
+- ofm_appdev_generic_11.1.1.7.0_disk1_1of1.zip
+- ofm_oud_generic_11.1.2.2.0_disk1_1of1.zip
 
 ###FMW patch
 - p17584181_111170_Generic.zip

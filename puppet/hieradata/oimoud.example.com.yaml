@@ -1,0 +1,78 @@
+---
+
+orawls::weblogic::log_output:   true
+
+orautils::osDomainTypeParam:      "oud"
+orautils::osDomainParam:          "oudDomain"
+orautils::osDomainPathParam:      "/opt/oracle/middleware11g/user_projects/domains/oudDomain"
+orautils::nodeMgrPathParam:       "/opt/oracle/middleware11g/wlserver_10.3/server/bin"
+
+orautils::nodeMgrPortParam:       5556
+orautils::nodeMgrAddressParam:    '10.10.10.71'
+orautils::wlsUserParam:           "weblogic"
+orautils::wlsPasswordParam:       "weblogic1"
+orautils::wlsAdminServerParam:    "AdminServer"
+
+logoutput:                     &logoutput                     true
+
+# FMW installation on top of WebLogic 10.3.6
+fmw_installations:
+  'adfPS7':
+    fmw_product:             "adf"
+    fmw_file1:               "ofm_appdev_generic_11.1.1.7.0_disk1_1of1.zip"
+    log_output:              true
+    remote_file:             false
+  'oud11.1.2.2':
+    version:                 1112
+    fmw_product:             "oud"
+    fmw_file1:               "ofm_oud_generic_11.1.2.2.0_disk1_1of1.zip"
+    log_output:              true
+    remote_file:             false
+
+# when you have just one domain on a server
+domain_name:                "oudDomain"
+domain_adminserver:         "AdminServer"
+domain_adminserver_address: "10.10.10.71"
+domain_adminserver_port:    7001
+domain_nodemanager_port:    5556
+domain_wls_password:        "weblogic1"
+domain_user_config_file:    "/home/oracle/oracle-oudDomain-WebLogicConfig.properties"
+domain_user_key_file:       "/home/oracle/oracle-oudDomain-WebLogicKey.properties"
+
+
+# # create a standard domain
+# domain_instances:
+#   'oudDomain':
+#     version:                  1112
+#     domain_template:          "oim"
+#     development_mode:         true
+#     log_output:               *logoutput
+
+# # create and startup the nodemanager
+# nodemanager_instances:
+#   'nodemanager':
+#      nodemanager_address:  "10.10.10.71"
+#      log_output:           *logoutput
+
+# # startup adminserver for extra configuration
+# control_instances:
+#   'startWLSAdminServer':
+#      domain_name:          "oudDomain"
+#      server_type:          'admin'
+#      target:               'Server'
+#      server:               'AdminServer'
+#      action:               'start'
+#      log_output:           *logoutput
+
+# fmwlogdir_instances:
+#   'AdminServer':
+#      log_output:      true
+#      server:          'AdminServer'
+
+# # create password file for WLST utility
+# userconfig_instances:
+#   'oudDomain':
+#      log_output:           *logoutput
+#      user_config_dir:      '/home/oracle'
+
+
