@@ -1333,6 +1333,12 @@ Stop or start an OUD (Oracle Unified Directory) ldap instance
     $oud_control_instances = hiera('oud_control_instances', $default_params)
     create_resources('orawls::oud::control',$oud_control_instances, $default_params)
 
+    oud_control_instances:
+      'instance1':
+        oud_instances_home_dir:     '/opt/oracle/oud_instances' 
+        oud_instance_name:          'instance1'
+        action:                     'start'
+        log_output:                 *logoutput
 
 ##Types and providers
 
