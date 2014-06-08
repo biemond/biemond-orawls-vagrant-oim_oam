@@ -19,6 +19,8 @@ node 'oim1admin.example.com', 'oimoud.example.com' {
   include fmw_jrf_cluster
   include fmw_log_dir
   include fmw_webtier
+  include fmw_oudconfig
+  include fmw_oimconfig
 
   Class['java'] -> Class['orawls::weblogic']
 
@@ -273,8 +275,23 @@ class fmw_webtier {
   create_resources('orawls::utils::webtier',$webtier_instances, $default_params)
 }
 
-class resource_adapter {
+class fmw_oudconfig{
   require fmw_webtier
+  $default_params = {}
+  $oudconfig_instances = hiera('oudconfig_instances', $default_params)
+  create_resources('orawls::oud::instance',$oudconfig_instances, $default_params)
+}
+
+class fmw_oud_control{
+  require fmw_oudconfig
+  $default_params = {}
+  $oud_control_instances = hiera('oud_control_instances', $default_params)
+  create_resources('orawls::oud::control',$oud_control_instances, $default_params)
+}
+
+
+class resource_adapter {
+  require fmw_oud_control
   $default_params = {}
   $resource_adapter_instances = hiera('resource_adapter_instances', {})
   create_resources('orawls::resourceadapter',$resource_adapter_instances, $default_params)

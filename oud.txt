@@ -1,0 +1,181 @@
+
+
+
+mkdir /opt/oracle/oud_instances
+
+export INSTANCE_NAME=../oud_instances/asinst_first
+
+echo Welcome01 > /tmp/pass.txt
+
+/opt/oracle/middleware11g/Oracle_OUD1/oud-setup --cli --baseDN dc=example,dc=com --addBaseEntry --netsvc --ldapPort 1389 --adminConnectorPort 4444 --skipPortCheck --rootUserDN cn=Directory\ Manager --rootUserPasswordFile /tmp/pass.txt --doNotStart --serverTuning autotune --importTuning autotune --enableStartTLS --ldapsPort 1636 --generateSelfSignedCertificate --hostName oimoud.example.com --no-prompt --noPropertiesFile   
+
+/opt/oracle/oud_instances/asinst_first/OUD/bin/start-ds
+/opt/oracle/oud_instances/asinst_first/OUD/bin/start-ds --nodetach
+/opt/oracle/oud_instances/asinst_first/OUD/bin/stop-ds --restart
+/opt/oracle/oud_instances/asinst_first/OUD/bin/status
+
+/opt/oracle/oud_instances/asinst_first/OUD/bin/ldapsearch -h localhost -p 1389 -D "cn=directory manager" -w Welcome01 -b "dc=example,dc=com" "(objectclass=*)"
+
+
+/usr/java/jdk1.7.0_51/jre/bin/java -server -XX:MaxTenuringThreshold=1 -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=30 -Xms947m -Xmx947m -Dorg.opends.server.scriptName=start-ds org.opends.server.core.DirectoryServer --configClass org.opends.server.extensions.ConfigFileHandler --configFile /opt/oracle/oud_instances/asinst_first/OUD/config/config.ldif
+
+/opt/oracle/oud_instances/asinst_first/OUD
+
+oud-setup \
+          --cli \
+          --baseDN dc=example,dc=com \
+          --sampleData 2000 \
+          --netsvc \
+          --ldapPort 1389 \
+          --adminConnectorPort 4444 \
+          --rootUserDN cn=Directory\ Manager \
+          --rootUserPasswordFile ****** \
+          --serverTuning \
+          -server \
+          --importTuning jvm-default \
+          --no-prompt \
+          --noPropertiesFile
+
+oud-setup \
+          --cli \
+          --baseDN dc=example,dc=com \
+          --addBaseEntry \
+          --ldapPort 1389 \
+          --adminConnectorPort 4444 \
+          --rootUserDN cn=Directory\ Manager \
+          --rootUserPasswordFile ****** \
+          --ldapsPort 1636 \
+          --generateSelfSignedCertificate \
+          --hostName oimoud.example.com \
+          --serverTuning autotune \
+          --importTuning autotune \
+          --no-prompt \
+          --noPropertiesFile
+
+This utility can be used to setup the Directory Server
+
+Usage:  oud-setup  {options}
+        where {options} include:
+
+-i, --cli
+    Use the command line install. If not specified the graphical interface will
+    be launched.  The rest of the options (excluding help and version) will
+    only be taken into account if this option is specified
+-b, --baseDN {baseDN}
+    Base DN for user information in the Directory Server.  Multiple base DNs
+    may be provided by using this option multiple times
+-a, --addBaseEntry
+    Indicates whether to create the base entry in the Directory Server database
+-l, --ldifFile {ldifFile}
+    Path to an LDIF file containing data that should be added to the Directory
+    Server database. Multiple LDIF files may be provided by using this option
+    multiple times
+-R, --rejectFile {rejectFile}
+    Write rejected entries to the specified file
+--skipFile {skipFile}
+    Write skipped entries to the specified file
+-d, --sampleData {numEntries}
+    Specifies that the database should be populated with the specified number
+    of sample entries
+    Default value: 0
+--eus
+    Configure the server for EUS
+--netsvc
+    Configure the server for Oracle Net Services
+-p, --ldapPort {port}
+    Port on which the Directory Server should listen for LDAP communication
+    Default value: 1389
+--adminConnectorPort {port}
+    Port on which the Administration Connector should listen for communication
+    Default value: 4444
+-x, --jmxPort {jmxPort}
+    Port on which the Directory Server should listen for JMX communication
+    Default value: 1689
+-S, --skipPortCheck
+    Skip the check to determine whether the specified ports are usable
+-D, --rootUserDN {rootUserDN}
+    DN for the initial root user for the Directory Server
+    Default value: cn=Directory Manager
+-j, --rootUserPasswordFile {rootUserPasswordFile}
+    Path to a file containing the password for the initial root user for the
+    Directory Server
+-O, --doNotStart
+    Do not start the server when the configuration is completed
+-q, --enableStartTLS
+    Enable StartTLS to allow secure communication with the server using the
+    LDAP port
+-Z, --ldapsPort {port}
+    Port on which the Directory Server should listen for LDAPS communication.
+    The LDAPS port will be configured and SSL will be enabled only if this
+    argument is explicitly specified
+    Default value: 1636
+--generateSelfSignedCertificate
+    Generate a self-signed certificate that the server should use when
+    accepting SSL-based connections or performing StartTLS negotiation
+-h, --hostname {host}
+    Directory server host name or IP address that will be used to generate the
+    self-signed certificate.  This argument will be taken into account only if
+    the self-signed certificate argument generateSelfSignedCertificate is
+    specified
+    Default value: oimoud.example.com
+--usePkcs11Keystore
+    Use a certificate in a PKCS#11 token that the server should use when
+    accepting SSL-based connections or performing StartTLS negotiation
+--useJavaKeystore {keyStorePath}
+    Path of a Java Key Store (JKS) containing a certificate to be used as the
+    server certificate
+--useJCEKS {keyStorePath}
+    Path of a JCEKS containing a certificate to be used as the server
+    certificate
+--usePkcs12keyStore {keyStorePath}
+    Path of a PKCS#12 key store containing the certificate that the server
+    should use when accepting SSL-based connections or performing StartTLS
+    negotiation
+-u, --keyStorePasswordFile {keyStorePasswordFile}
+    Certificate key store PIN file.  A PIN is required when you specify to use
+    an existing certificate (JKS, JCEKS, PKCS#12 or PKCS#11) as server
+    certificate
+-N, --certNickname {nickname}
+    Nickname of the certificate that the server should use when accepting
+    SSL-based connections or performing StartTLS negotiation
+--serverTuning {autotune | jvm-default | JVM arguments}
+    Specifies the server runtime tuning.  The server can be automatically tuned
+    each time it is launched  (provide the value 'autotune'), the server can
+    use the default value of the Java Virtual Machine (provide the value
+    'jvm-default'), or you can provide directly the Java arguments that the
+    server must use (for instance '-server -Xmx1024m')
+    Default value: -server
+--importTuning {autotune | jvm-default | JVM arguments}
+    Specifies the import tuning.  The import tool can be automatically tuned
+    each time it is launched (provide the value 'autotune'), the import can use
+    the default Java Virtual Machine on your system to choose the runtime
+    settings (provide the value 'jvm-default'), or you can provide directly the
+    Java arguments that the import tool must use (for instance '-server
+    -Xmx1024m')
+    Default value: -server
+
+LDAP Connection Options
+
+
+Utility Input/Output Options
+
+-n, --no-prompt
+    Perform an installation in non-interactive mode.  If some data in the
+    command is missing the user will not be prompted and the tool will fail
+-Q, --quiet
+    Run setup in quiet mode.  Quiet mode will not output progress information
+    to standard output
+-v, --verbose
+    Use verbose mode
+--propertiesFilePath {propertiesFilePath}
+    Path to the file containing default property values used for command line
+    arguments
+--noPropertiesFile
+    No properties file will be used to get default command line argument values
+
+General Options
+
+-V, --version
+    Display Directory Server version information
+-?, -H, --help
+    Display this usage information
