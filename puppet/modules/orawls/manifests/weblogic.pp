@@ -1,13 +1,13 @@
 # == Class: orawls::weblogic
 #
 class orawls::weblogic (
-  $version              = 1111,  # 1036|1111|1211|1212
-  $filename             = undef, # wls1036_generic.jar|wls1211_generic.jar|wls_121200.jar|oepe-wls-indigo-installer-11.1.1.8.0.201110211138-10.3.6-linux32.bin
+  $version              = 1111,  # 1036|1111|1211|1212|1214
+  $filename             = undef, # wls1036_generic.jar|wls1211_generic.jar|wls_121200.jar|wls_121300.jar|oepe-wls-indigo-installer-11.1.1.8.0.201110211138-10.3.6-linux32.bin
   $oracle_base_home_dir = undef, # /opt/oracle
   $middleware_home_dir  = undef, # /opt/oracle/middleware11gR1
   $wls_domains_dir      = undef, # /opt/oracle/wlsdomains/domains
   $wls_apps_dir         = undef, # /opt/oracle/wlsdomains/applications
-  $fmw_infra            = false, # true|false 12.1.2 option -> plain weblogic or fmw infra
+  $fmw_infra            = false, # true|false 12.1.2/12.1.3 option -> plain weblogic or fmw infra
   $jdk_home_dir         = undef, # /usr/java/jdk1.7.0_45
   $os_user              = undef, # oracle
   $os_group             = undef, # dba
@@ -18,6 +18,11 @@ class orawls::weblogic (
   $log_output           = false, # true|false
   $temp_directory       = '/tmp',# /tmp temporay directory for files extractions
 ) {
+
+  # check required parameters
+  if ( $filename == undef or $oracle_base_home_dir == undef or $middleware_home_dir == undef or $jdk_home_dir == undef or $os_user == undef or $os_group == undef or $download_dir == undef ) {
+    fail('please provide all the required parameters')
+  }
 
   if ( $wls_domains_dir != undef ) {
     # make sure you don't create the middleware home, else root will be owner
@@ -37,16 +42,16 @@ class orawls::weblogic (
   }
 
   if ($version == 1036 or $version == 1111 or $version == 1211) {
-    $silent_template = "orawls/weblogic_silent_install.xml.erb"
-  } elsif ( $version == 1212) {
+    $silent_template = 'orawls/weblogic_silent_install.xml.erb'
+  } elsif ( $version == 1212 or $version == 1213 ) {
 
     #The oracle home location. This can be an existing Oracle Home or a new Oracle Home
     if ( $fmw_infra == true ) {
-      $install_type="Fusion Middleware Infrastructure"
+      $install_type='Fusion Middleware Infrastructure'
     } else {
-      $install_type="WebLogic Server"
+      $install_type='WebLogic Server'
     }
-    $silent_template = "orawls/weblogic_silent_install_1212.rsp.erb"
+    $silent_template = "orawls/weblogic_silent_install_${version}.rsp.erb"
 
   } else  {
     fail('unknown weblogic version parameter')
@@ -61,11 +66,11 @@ class orawls::weblogic (
 
   case $::kernel {
     'Linux': {
-      $oraInstPath        = "/etc"
+      $oraInstPath        = '/etc'
       $java_statement     = "java ${javaParameters}"
     }
     'SunOS': {
-      $oraInstPath       = "/var/opt/oracle"
+      $oraInstPath       = '/var/opt/oracle'
       $java_statement    = "java -d64 ${javaParameters}"
     }
     default: {
@@ -74,7 +79,7 @@ class orawls::weblogic (
   }
 
   if $source == undef {
-    $mountPoint = "puppet:///modules/orawls/"
+    $mountPoint = 'puppet:///modules/orawls/'
   } else {
     $mountPoint = $source
   }
@@ -90,7 +95,7 @@ class orawls::weblogic (
   if $jar_file {
     $cmd_prefix = "${java_statement} -Xmx1024m -Djava.io.tmpdir=${temp_directory} -jar "
   } else {
-    $cmd_prefix = ""
+    $cmd_prefix = ''
   }
 
   if $remote_file == true {
@@ -145,13 +150,13 @@ class orawls::weblogic (
     require => Orawls::Utils::Structure["weblogic structure ${version}"],
   }
 
-  if ($version == 1212) {
+  if ($version == 1212 or $version == 1213) {
 
     $command = "-silent -responseFile ${download_dir}/weblogic_silent_install.xml "
 
     exec { "install weblogic ${version}":
-      command     => "${cmd_prefix}${weblogic_jar_location} -Djava.io.tmpdir=${temp_directory} ${command} -invPtrLoc ${oraInstPath}/oraInst.loc -ignoreSysPrereqs",
-      environment => ["JAVA_VENDOR=Sun", "JAVA_HOME=${jdk_home_dir}"],
+      command     => "${cmd_prefix}${weblogic_jar_location} ${command} -invPtrLoc ${oraInstPath}/oraInst.loc -ignoreSysPrereqs",
+      environment => ['JAVA_VENDOR=Sun', "JAVA_HOME=${jdk_home_dir}"],
       timeout     => 0,
       creates     => $middleware_home_dir,
       path        => $exec_path,
@@ -164,7 +169,7 @@ class orawls::weblogic (
     # OPatch native lib fix for 64 solaris
     case $::kernel {
       SunOS: {
-        exec { "add -d64 oraparam.ini oracle_common":
+        exec { 'add -d64 oraparam.ini oracle_common':
           command => "sed -e's/JRE_MEMORY_OPTIONS=/JRE_MEMORY_OPTIONS=\"-d64\"/g' ${middleware_home_dir}/oui/oraparam.ini > ${temp_directory}/wls.tmp && mv ${temp_directory}/wls.tmp ${middleware_home_dir}/oui/oraparam.ini",
           unless  => "grep 'JRE_MEMORY_OPTIONS=\"-d64\"' ${middleware_home_dir}/oui/oraparam.ini",
           require => Exec["install weblogic ${version}"],
@@ -178,7 +183,7 @@ class orawls::weblogic (
   } else {
     exec {"install weblogic ${version}":
       command     => "${cmd_prefix}${weblogic_jar_location} -Djava.io.tmpdir=${temp_directory} -mode=silent -silent_xml=${download_dir}/weblogic_silent_install.xml",
-      environment => ["JAVA_VENDOR=Sun","JAVA_HOME=${jdk_home_dir}"],
+      environment => ['JAVA_VENDOR=Sun',"JAVA_HOME=${jdk_home_dir}"],
       creates     => $middleware_home_dir,
       timeout     => 0,
       path        => $exec_path,

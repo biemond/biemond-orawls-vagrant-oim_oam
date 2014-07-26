@@ -4,23 +4,23 @@
 ##
 define orawls::copydomain (
   $version                    = hiera('wls_version'               , 1111),  # 1036|1111|1211|1212
-  $middleware_home_dir        = hiera('wls_middleware_home_dir'   , undef), # /opt/oracle/middleware11gR1
-  $weblogic_home_dir          = hiera('wls_weblogic_home_dir'     , undef), # /opt/oracle/middleware11gR1/wlserver_103
-  $jdk_home_dir               = hiera('wls_jdk_home_dir'          , undef), # /usr/java/jdk1.7.0_45
+  $middleware_home_dir        = hiera('wls_middleware_home_dir'), # /opt/oracle/middleware11gR1
+  $weblogic_home_dir          = hiera('wls_weblogic_home_dir'), # /opt/oracle/middleware11gR1/wlserver_103
+  $jdk_home_dir               = hiera('wls_jdk_home_dir'), # /usr/java/jdk1.7.0_45
   $wls_domains_dir            = hiera('wls_domains_dir'           , undef),
   $wls_apps_dir               = hiera('wls_apps_dir'              , undef),
   $use_ssh                    = true,
   $domain_pack_dir            = undef,
-  $domain_name                = hiera('domain_name'               , undef),
-  $adminserver_address        = hiera('domain_adminserver_address', undef),
+  $domain_name                = hiera('domain_name'),
+  $adminserver_address        = hiera('domain_adminserver_address'),
   $adminserver_port           = hiera('domain_adminserver_port'   , 7001),
   $userConfigFile             = hiera('domain_user_config_file'   , undef),
   $userKeyFile                = hiera('domain_user_key_file'      , undef),
-  $weblogic_user              = hiera('wls_weblogic_user'         , "weblogic"),
+  $weblogic_user              = hiera('wls_weblogic_user'         , 'weblogic'),
   $weblogic_password          = hiera('domain_wls_password'       , undef),
-  $os_user                    = hiera('wls_os_user'               , undef), # oracle
-  $os_group                   = hiera('wls_os_group'              , undef), # dba
-  $download_dir               = hiera('wls_download_dir'          , undef), # /data/install
+  $os_user                    = hiera('wls_os_user'), # oracle
+  $os_group                   = hiera('wls_os_group'), # dba
+  $download_dir               = hiera('wls_download_dir'), # /data/install
   $log_dir                    = hiera('wls_log_dir'               , undef), # /data/logs
   $log_output                 = false, # true|false
 )
@@ -28,19 +28,19 @@ define orawls::copydomain (
   if ( $wls_domains_dir == undef ) {
     $domains_dir = "${middleware_home_dir}/user_projects/domains"
   } else {
-    $domains_dir =  $wls_domains_dir 
+    $domains_dir =  $wls_domains_dir
   }
 
   if ( $wls_apps_dir == undef ) {
     $apps_dir = "${middleware_home_dir}/user_projects/applications"
   } else {
-    $apps_dir =  $wls_apps_dir 
+    $apps_dir =  $wls_apps_dir
   }
 
   if ( $version == 1036 or $version == 1111 or $version == 1211 ) {
     $nodeMgrHome = "${weblogic_home_dir}/common/nodemanager"
 
-  } elsif $version == 1212 {
+  } elsif $version == 1212 or $version == 1213 {
     $nodeMgrHome = "${domains_dir}/${domain_name}/nodemanager"
 
   } else {
@@ -95,9 +95,9 @@ define orawls::copydomain (
     }
 
     if ( $domains_dir == "${middleware_home_dir}/user_projects/domains"){
-      if !defined(File["weblogic_domain_folder"]) {
+      if !defined(File['weblogic_domain_folder']) {
           # check oracle install folder
-          file { "weblogic_domain_folder":
+          file { 'weblogic_domain_folder':
             ensure  => directory,
             path    => "${middleware_home_dir}/user_projects",
             recurse => false,
@@ -106,7 +106,7 @@ define orawls::copydomain (
             owner   => $os_user,
             group   => $os_group,
           }
-        File["weblogic_domain_folder"] -> File[$domains_dir]  
+        File['weblogic_domain_folder'] -> File[$domains_dir]
       }
     }
 
@@ -153,10 +153,10 @@ define orawls::copydomain (
         group     => $os_group,
         logoutput => $log_output,
       }
-    } 
+    }
 
     $app_dir_arg = $apps_dir ? {
-      undef      => "",
+      undef      => '',
       default    => "-app_dir=${apps_dir}"
     }
 
@@ -168,13 +168,13 @@ define orawls::copydomain (
       user      => $os_user,
       group     => $os_group,
       logoutput => $log_output,
-      timeout   => 0, 
+      timeout   => 0,
       require   => [File[$domains_dir],
                     Exec["copy domain jar ${domain_name}"]],
     }
 
     yaml_setting { "domain ${title}":
-      target =>  "/etc/wls_domains.yaml",
+      target =>  '/etc/wls_domains.yaml',
       key    =>  "domains/${domain_name}",
       value  =>  "${domains_dir}/${domain_name}",
     }
@@ -183,7 +183,7 @@ define orawls::copydomain (
     file { "enroll.py ${domain_name} ${title}":
       ensure  => present,
       path    => "${download_dir}/enroll_domain_${domain_name}.py",
-      content => template("orawls/wlst/enrollDomain.py.erb"),
+      content => template('orawls/wlst/enrollDomain.py.erb'),
       replace => true,
       mode    => '0775',
       owner   => $os_user,

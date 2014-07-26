@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="orawls::urandomfix on operatingsystem Ubuntu" tests="2" time="0.008471" failures="0" errors="0" skipped="0" timestamp="2014-07-26T23:01:47+02:00">
+  <testcase name="orawls::urandomfix on operatingsystem Ubuntu should contain Exec[set urandom /etc/default/rng-tools] with user =&gt; &quot;root&quot;" time="0.003761">
+  </testcase>
+  <testcase name="orawls::urandomfix on operatingsystem Ubuntu should contain Service[start rng-tools service] with ensure =&gt; true and enable =&gt; true" time="0.004237">
+  </testcase>
+</testsuite>

@@ -4,18 +4,20 @@
 #
 ##
 define orawls::fmw (
-  $version                    = hiera('wls_version'               , 1111),  # 1036|1111|1211|1212
-  $weblogic_home_dir          = hiera('wls_weblogic_home_dir'     , undef), # /opt/oracle/middleware11gR1/wlserver_103
-  $middleware_home_dir        = hiera('wls_middleware_home_dir'   , undef), # /opt/oracle/middleware11gR1
-  $oracle_base_home_dir       = hiera('wls_oracle_base_home_dir'  , undef), # /opt/oracle
+  $version                    = hiera('wls_version'               , 1111),  # 1036|1111|1211|1212|1213
+  $weblogic_home_dir          = hiera('wls_weblogic_home_dir'), # /opt/oracle/middleware11gR1/wlserver_103
+  $middleware_home_dir        = hiera('wls_middleware_home_dir'), # /opt/oracle/middleware11gR1
+  $oracle_base_home_dir       = hiera('wls_oracle_base_home_dir'), # /opt/oracle
   $oracle_home_dir            = undef,                                      # /opt/oracle/middleware/Oracle_SOA
-  $jdk_home_dir               = hiera('wls_jdk_home_dir'          , undef), # /usr/java/jdk1.7.0_45
-  $fmw_product                = undef,                                      # adf|soa|osb|wcc|wc|oim|web|webgate|oud
+  $jdk_home_dir               = hiera('wls_jdk_home_dir'), # /usr/java/jdk1.7.0_45
+  $fmw_product                = undef,                                      # adf|soa|osb|wcc|wc|oim|web|webgate|oud|mft|b2b
   $fmw_file1                  = undef,
   $fmw_file2                  = undef,
-  $os_user                    = hiera('wls_os_user'               , undef), # oracle
-  $os_group                   = hiera('wls_os_group'              , undef), # dba
-  $download_dir               = hiera('wls_download_dir'          , undef), # /data/install
+  $bpm                        = false,
+  $healthcare                 = false,
+  $os_user                    = hiera('wls_os_user'), # oracle
+  $os_group                   = hiera('wls_os_group'), # dba
+  $download_dir               = hiera('wls_download_dir'), # /data/install
   $source                     = hiera('wls_source'                , undef), # puppet:///modules/orawls/ | /mnt | /vagrant
   $remote_file                = true,                                       # true|false
   $log_output                 = false,                                      # true|false
@@ -27,35 +29,35 @@ define orawls::fmw (
 
   case $::kernel {
     'Linux': {
-      $oraInstPath   = "/etc"
+      $oraInstPath   = '/etc'
       case $::architecture {
         'i386': {
-          $installDir   = "linux"
+          $installDir   = 'linux'
         }
         default: {
-          $installDir   = "linux64"
+          $installDir   = 'linux64'
         }
-      } 
+      }
     }
     'SunOS': {
-      $oraInstPath   = "/var/opt/oracle"
+      $oraInstPath   = '/var/opt/oracle'
       case $::architecture {
         'i86pc': {
-          $installDir    = "intelsolaris"
+          $installDir    = 'intelsolaris'
         }
         default: {
-          $installDir    = "solaris"
+          $installDir    = 'solaris'
         }
       }
     }
     default: {
       fail("Unrecognized operating system ${::kernel}, please use it on a Linux host")
-    }    
+    }
 
   }
 
-  if ( $fmw_product == "adf" ) {
-    $fmw_silent_response_file = "orawls/fmw_silent_adf.rsp.erb"
+  if ( $fmw_product == 'adf' ) {
+    $fmw_silent_response_file = 'orawls/fmw_silent_adf.rsp.erb'
     if ($oracle_home_dir == undef) {
       $oracleHome = "${middleware_home_dir}/oracle_common"
     }
@@ -65,31 +67,86 @@ define orawls::fmw (
     $createFile1 = "${download_dir}/${fmw_product}/Disk1"
     $total_files = 1
 
-  } elsif ( $fmw_product == "soa" ) {
-    $fmw_silent_response_file = "orawls/fmw_silent_soa.rsp.erb"
-    if ($oracle_home_dir == undef) {
-      $oracleHome = "${middleware_home_dir}/Oracle_SOA1"
-    }
-    else {
-      $oracleHome = $oracle_home_dir
-    }
-    $createFile1 = "${download_dir}/${fmw_product}/Disk1"
-    $createFile2 = "${download_dir}/${fmw_product}/Disk4"
-    $total_files = 2
+  } elsif ( $fmw_product == 'soa' ) {
 
-  } elsif ( $fmw_product == "osb" ) {
-    $fmw_silent_response_file = "orawls/fmw_silent_osb.rsp.erb"
-    if ($oracle_home_dir == undef) {
-      $oracleHome = "${middleware_home_dir}/Oracle_OSB1"
+    if $version == 1213 {
+      $total_files = 1
+      $fmw_silent_response_file = 'orawls/fmw_silent_soa_1213.rsp.erb'
+      $binFile1                 = 'fmw_12.1.3.0.0_soa.jar'
+      $createFile1              = "${download_dir}/${fmw_product}/${binFile1}"
+      $oracleHome               = "${middleware_home_dir}/soa/bin"
+      $type                     = 'java'
+      if $bpm == true {
+        $install_type = 'BPM'
+      } else {
+        $install_type = 'SOA Suite'
+      }
+
+    } else {
+      $total_files = 2
+      $fmw_silent_response_file = 'orawls/fmw_silent_soa.rsp.erb'
+      $createFile1 = "${download_dir}/${fmw_product}/Disk1"
+      $createFile2 = "${download_dir}/${fmw_product}/Disk4"
+      if ($oracle_home_dir == undef) {
+        $oracleHome = "${middleware_home_dir}/Oracle_SOA1"
+      }
+      else {
+        $oracleHome = $oracle_home_dir
+      }
     }
-    else {
-      $oracleHome = $oracle_home_dir
-    }
-    $createFile1 = "${download_dir}/${fmw_product}/Disk1"
+
+  } elsif ( $fmw_product == 'osb' ) {
+
     $total_files = 1
+    if $version == 1213 {
+      $fmw_silent_response_file = 'orawls/fmw_silent_osb_1213.rsp.erb'
+      $binFile1                 = 'fmw_12.1.3.0.0_osb.jar'
+      $createFile1              = "${download_dir}/${fmw_product}/${binFile1}"
+      $oracleHome               = "${middleware_home_dir}/osb/bin"
+      $type                     = 'java'
+    } else {
+      $fmw_silent_response_file = 'orawls/fmw_silent_osb.rsp.erb'
+      $createFile1 = "${download_dir}/${fmw_product}/Disk1"
+      if ($oracle_home_dir == undef) {
+        $oracleHome = "${middleware_home_dir}/Oracle_OSB1"
+      }
+      else {
+        $oracleHome = $oracle_home_dir
+      }
+    }
+  } elsif ( $fmw_product == 'b2b' ) {
 
-  } elsif ( $fmw_product == "oim" ) {
-    $fmw_silent_response_file = "orawls/fmw_silent_oim.rsp.erb"
+    if $version == 1213 {
+      $total_files = 1
+      $fmw_silent_response_file = 'orawls/fmw_silent_b2b_1213.rsp.erb'
+      $binFile1                 = 'fmw_12.1.3.0.0_b2bhealthcare.jar'
+      $createFile1              = "${download_dir}/${fmw_product}/${binFile1}"
+      $oracleHome               = "${middleware_home_dir}/soa/soa/modules/oracle.soa.b2b_11.1.1/b2b.jar"
+      $type                     = 'java'
+      if $healthcare == true {
+        $install_type = 'Healthcare'
+      } else {
+        $install_type = 'B2B'
+      }
+    } else {
+      fail('Unrecognized version for b2b')
+    }
+  } elsif ( $fmw_product == 'mft' ) {
+
+    if $version == 1213 {
+      $total_files = 1
+      $fmw_silent_response_file = 'orawls/fmw_silent_mft_1213.rsp.erb'
+      $binFile1                 = 'fmw_12.1.3.0.0_mft.jar'
+      $createFile1              = "${download_dir}/${fmw_product}/${binFile1}"
+      $oracleHome               = "${middleware_home_dir}/mft/bin"
+      $type                     = 'java'
+
+    } else {
+      fail('Unrecognized version for mft')
+    }
+
+  } elsif ( $fmw_product == 'oim' ) {
+    $fmw_silent_response_file = 'orawls/fmw_silent_oim.rsp.erb'
     if ($oracle_home_dir == undef) {
       $oracleHome = "${middleware_home_dir}/Oracle_IDM1"
     }
@@ -100,8 +157,8 @@ define orawls::fmw (
     $createFile2 = "${download_dir}/${fmw_product}/Disk4"
     $total_files = 2
 
-  } elsif ( $fmw_product == "wc" ) {
-    $fmw_silent_response_file = "orawls/fmw_silent_wc.rsp.erb"
+  } elsif ( $fmw_product == 'wc' ) {
+    $fmw_silent_response_file = 'orawls/fmw_silent_wc.rsp.erb'
     if ($oracle_home_dir == undef) {
       $oracleHome = "${middleware_home_dir}/Oracle_WC1"
     }
@@ -111,8 +168,8 @@ define orawls::fmw (
     $createFile1 = "${download_dir}/${fmw_product}/Disk1"
     $total_files = 1
 
-  } elsif ( $fmw_product == "wcc" ) {
-    $fmw_silent_response_file = "orawls/fmw_silent_wcc.rsp.erb"
+  } elsif ( $fmw_product == 'wcc' ) {
+    $fmw_silent_response_file = 'orawls/fmw_silent_wcc.rsp.erb'
     if ($oracle_home_dir == undef) {
       $oracleHome = "${middleware_home_dir}/Oracle_WCC1"
     }
@@ -123,32 +180,39 @@ define orawls::fmw (
     $createFile2 = "${download_dir}/${fmw_product}/Disk2"
     $total_files = 2
 
-  } elsif ( $fmw_product == "web" ) {
+  } elsif ( $fmw_product == 'web') {
 
-    if $version == 1212 { 
-      $fmw_silent_response_file = "orawls/web_http_server_1212.rsp.erb"
-      $binFile1                 = "ohs_121200_linux64.bin"
+    if $version == 1212 {
+      $fmw_silent_response_file = 'orawls/web_http_server_1212.rsp.erb'
+      $binFile1                 = 'ohs_121200_linux64.bin'
       $createFile1              = "${download_dir}/${fmw_product}/${binFile1}"
+      $type                     = 'bin'
+    }
+    elsif $version == 1213 {
+      $fmw_silent_response_file = 'orawls/web_http_server_1213.rsp.erb'
+      $binFile1                 = 'fmw_12.1.3.0.0_ohs_linux64.bin'
+      $createFile1              = "${download_dir}/${fmw_product}/${binFile1}"
+      $type                     = 'bin'
     } else {
-      $fmw_silent_response_file = "orawls/web_http_server.rsp.erb"
+      $fmw_silent_response_file = 'orawls/web_http_server.rsp.erb'
       $createFile1              = "${download_dir}/${fmw_product}/Disk1"
-    }  
+    }
 
     if ($oracle_home_dir == undef) {
-      if $version == 1212 { 
+      if $version == 1212 or $version == 1213 {
         $oracleHome = "${middleware_home_dir}/ohs"
       } else {
         $oracleHome = "${middleware_home_dir}/Oracle_WT1"
-      }  
+      }
     }
     else {
       $oracleHome = $oracle_home_dir
     }
     $total_files = 1
 
-  } elsif ( $fmw_product == "webgate" ) {
+  } elsif ( $fmw_product == 'webgate' ) {
 
-    $fmw_silent_response_file = "orawls/fmw_webgate.rsp.erb"
+    $fmw_silent_response_file = 'orawls/fmw_webgate.rsp.erb'
     $createFile1              = "${download_dir}/${fmw_product}/Disk1"
 
     if ($oracle_home_dir == undef) {
@@ -159,9 +223,9 @@ define orawls::fmw (
     }
     $total_files = 1
 
-  } elsif ( $fmw_product == "oud" ) {
+  } elsif ( $fmw_product == 'oud' ) {
 
-    $fmw_silent_response_file = "orawls/fmw_silent_oud.rsp.erb"
+    $fmw_silent_response_file = 'orawls/fmw_silent_oud.rsp.erb'
     $createFile1              = "${download_dir}/${fmw_product}/Disk1"
 
     if ($oracle_home_dir == undef) {
@@ -177,7 +241,7 @@ define orawls::fmw (
   }
 
   # check if the oracle home already exists, only for < 12.1.2, this is for performance reasons
-  if $version == 1212 {
+  if $version == 1212 or $version == 1213 {
     $continue = true
   } else {
     $found = orawls_oracle_exists($oracleHome)
@@ -197,7 +261,7 @@ define orawls::fmw (
   if ($continue) {
 
     if $source == undef {
-      $mountPoint = "puppet:///modules/orawls/"
+      $mountPoint = 'puppet:///modules/orawls/'
     } else {
       $mountPoint = $source
     }
@@ -232,7 +296,7 @@ define orawls::fmw (
     } else {
       $disk1_file = "${source}/${fmw_file1}"
     }
-      
+
     exec { "extract ${fmw_file1}":
       command   => "unzip -o ${disk1_file} -d ${download_dir}/${fmw_product}",
       creates   => $createFile1,
@@ -272,45 +336,53 @@ define orawls::fmw (
         group     => $os_group,
         logoutput => false,
         require   => Exec["extract ${fmw_file1}"],
-        before    => Exec["install ${fmw_product} ${title}"],             
+        before    => Exec["install ${fmw_product} ${title}"],
       }
     }
 
-    if $::kernel == "SunOS" {
-      if $fmw_product == "soa" {
-        exec { "add -d64 oraparam.ini ${title}":
-          command   => "sed -e's/JRE_MEMORY_OPTIONS=\" -Xverify:none\"/JRE_MEMORY_OPTIONS=\"-d64 -Xverify:none\"/g' ${download_dir}/${fmw_product}/Disk1/install/${installDir}/oraparam.ini > /tmp/soa.tmp && mv /tmp/soa.tmp ${download_dir}/${fmw_product}/Disk1/install/${installDir}/oraparam.ini",
-          unless    => "grep 'JRE_MEMORY_OPTIONS=\"-d64' ${download_dir}/${fmw_product}/Disk1/install/${installDir}/oraparam.ini",
-          require   => [Exec["extract ${fmw_file1}"],
-                        Exec["extract ${fmw_file2}"],],
-          before    => Exec["install ${fmw_product} ${title}"],
-          path      => $exec_path,
-          user      => $os_user,
-          group     => $os_group,
-          logoutput => $log_output,
+    if $::kernel == 'SunOS' {
+      if $version != 1213 {
+        if $fmw_product == 'soa' {
+          exec { "add -d64 oraparam.ini ${title}":
+            command   => "sed -e's/JRE_MEMORY_OPTIONS=\" -Xverify:none\"/JRE_MEMORY_OPTIONS=\"-d64 -Xverify:none\"/g' ${download_dir}/${fmw_product}/Disk1/install/${installDir}/oraparam.ini > /tmp/soa.tmp && mv /tmp/soa.tmp ${download_dir}/${fmw_product}/Disk1/install/${installDir}/oraparam.ini",
+            unless    => "grep 'JRE_MEMORY_OPTIONS=\"-d64' ${download_dir}/${fmw_product}/Disk1/install/${installDir}/oraparam.ini",
+            require   => [Exec["extract ${fmw_file1}"],
+                          Exec["extract ${fmw_file2}"],],
+            before    => Exec["install ${fmw_product} ${title}"],
+            path      => $exec_path,
+            user      => $os_user,
+            group     => $os_group,
+            logoutput => $log_output,
+          }
         }
-      }
-      if $fmw_product == "osb" {
-        exec { "add -d64 oraparam.ini ${title}":
-          command   => "sed -e's/\\[Oracle\\]/\\[Oracle\\]\\\nJRE_MEMORY_OPTIONS=\"-d64\"/g' ${download_dir}/${fmw_product}/Disk1/install/${installDir}/oraparam.ini > /tmp/osb.tmp && mv /tmp/osb.tmp ${download_dir}/${fmw_product}/Disk1/install/${installDir}/oraparam.ini",
-          unless    => "grep 'JRE_MEMORY_OPTIONS=\"-d64\"' ${download_dir}/${fmw_product}/Disk1/install/${installDir}/oraparam.ini",
-          require   => Exec["extract ${fmw_file1}"],
-          before    => Exec["install ${fmw_product} ${title}"],
-          path      => $exec_path,
-          user      => $os_user,
-          group     => $os_group,
-          logoutput => $log_output,
+        if $fmw_product == 'osb' {
+          exec { "add -d64 oraparam.ini ${title}":
+            command   => "sed -e's/\\[Oracle\\]/\\[Oracle\\]\\\nJRE_MEMORY_OPTIONS=\"-d64\"/g' ${download_dir}/${fmw_product}/Disk1/install/${installDir}/oraparam.ini > /tmp/osb.tmp && mv /tmp/osb.tmp ${download_dir}/${fmw_product}/Disk1/install/${installDir}/oraparam.ini",
+            unless    => "grep 'JRE_MEMORY_OPTIONS=\"-d64\"' ${download_dir}/${fmw_product}/Disk1/install/${installDir}/oraparam.ini",
+            require   => Exec["extract ${fmw_file1}"],
+            before    => Exec["install ${fmw_product} ${title}"],
+            path      => $exec_path,
+            user      => $os_user,
+            group     => $os_group,
+            logoutput => $log_output,
+          }
         }
       }
     }
 
     $command = "-silent -response ${download_dir}/${title}_silent_${fmw_product}.rsp -waitforcompletion"
 
-    #notify { "orawls::fmw ${download_dir}/${fmw_product}/Disk1/install/${installDir}/runInstaller ${command} -invPtrLoc ${oraInstPath}/oraInst.loc -ignoreSysPrereqs -jreLoc ${jdk_home_dir} -Djava.io.tmpdir=${temp_directory}": } 
-    
-    if $version == 1212 {
+    #notify { "orawls::fmw ${download_dir}/${fmw_product}/Disk1/install/${installDir}/runInstaller ${command} -invPtrLoc ${oraInstPath}/oraInst.loc -ignoreSysPrereqs -jreLoc ${jdk_home_dir} -Djava.io.tmpdir=${temp_directory}": }
+    if $version == 1212 or $version == 1213 {
+      if $type == 'java' {
+        $install = 'java -jar '
+      }
+      else {
+        $install = ''
+      }
+
       exec { "install ${fmw_product} ${title}":
-        command     => "${download_dir}/${fmw_product}/${binFile1} ${command} -invPtrLoc ${oraInstPath}/oraInst.loc -ignoreSysPrereqs -jreLoc ${jdk_home_dir} -Djava.io.tmpdir=${temp_directory}",
+        command     => "${install}${download_dir}/${fmw_product}/${binFile1} ${command} -invPtrLoc ${oraInstPath}/oraInst.loc -ignoreSysPrereqs -jreLoc ${jdk_home_dir}",
         environment => "TMP=${temp_directory}",
         timeout     => 0,
         creates     => $oracleHome,
@@ -324,10 +396,10 @@ define orawls::fmw (
       }
     } else {
       file { $oracleHome:
-        ensure => "directory",
+        ensure => 'directory',
         owner  => $os_user,
         group  => $os_group,
-        before => Exec["install ${fmw_product} ${title}"],      
+        before => Exec["install ${fmw_product} ${title}"],
       }
 
       exec { "install ${fmw_product} ${title}":
@@ -345,7 +417,7 @@ define orawls::fmw (
       }
 
       ## fix EditHttpConf in OHS Webgate
-      if ( $version == 1112 and $fmw_product == "webgate" ) {
+      if ( $version == 1112 and $fmw_product == 'webgate' ) {
         exec { "install ${fmw_product} ${title} EditHttpConf1":
           command     => "unzip -o -j '${download_dir}/${fmw_product}/Disk1/stage/Components/oracle.as.oam.webgate.ohs_linux64/11.1.2.2.0/1/DataFiles/filegroup1.jar' 'webgate/ohs/lib/libxmlengine.so' -d '${oracleHome}/webgate/ohs/lib/'",
           timeout     => 0,
@@ -381,9 +453,7 @@ define orawls::fmw (
           backup   => false,
           require  => Exec["install ${fmw_product} ${title} EditHttpConf3"],
         }
-
       }
-
-    }  
+    }
   }
 }
