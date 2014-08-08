@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="orawls::urandomfix" tests="1" time="0.265025" failures="0" errors="0" skipped="0" timestamp="2014-07-26T23:01:47+02:00">
-  <testcase name="orawls::urandomfix should contain Package[rng-tools] with ensure =&gt; &quot;present&quot;" time="0.264729">
-  </testcase>
-</testsuite>

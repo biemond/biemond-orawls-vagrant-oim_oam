@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="orawls::weblogic weblogic remote install weblogic silent file" tests="1" time="0.005188" failures="0" errors="0" skipped="0" timestamp="2014-07-26T23:01:48+02:00">
-  <testcase name="orawls::weblogic weblogic remote install weblogic silent file should contain File[/install/weblogic_silent_install.xml] with content =&gt; &quot;&lt;?xml version=\&quot;1.0\&quot; encoding=\&quot;UTF-8\&quot;?&gt;\n   &lt;bea-installer&gt; \n     &lt;input-fields&gt;\n       &lt;data-value name=\&quot;BEAHOME\&quot; value=\&quot;/opt/oracle/middleware11gR1\&quot; /&gt;\n   &lt;/input-fields&gt; \n&lt;/bea-installer&gt;&quot;" time="0.004819">
-  </testcase>
-</testsuite>

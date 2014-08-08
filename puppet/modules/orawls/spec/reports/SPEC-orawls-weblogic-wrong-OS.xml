@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="orawls::weblogic wrong OS" tests="1" time="0.058734" failures="0" errors="0" skipped="0" timestamp="2014-07-26T23:01:48+02:00">
-  <testcase name="orawls::weblogic wrong OS should contain File[/install/weblogic_silent_install.xml]" time="0.058324">
-  </testcase>
-</testsuite>

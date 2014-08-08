@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="orawls::bsu CentOS local extract patch" tests="1" time="0.003448" failures="0" errors="0" skipped="0" timestamp="2014-07-26T23:01:48+02:00">
-  <testcase name="orawls::bsu CentOS local extract patch should contain Exec[extract p17572726_1036_Generic.zip] with command =&gt; &quot;unzip -n /mnt/p17572726_1036_Generic.zip -d /opt/oracle/middleware11gR1/utils/bsu/cache_dir&quot;" time="0.003161">
-  </testcase>
-</testsuite>

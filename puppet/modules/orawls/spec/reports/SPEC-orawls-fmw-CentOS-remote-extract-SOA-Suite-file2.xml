@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="orawls::fmw CentOS remote extract SOA Suite file2" tests="1" time="0.003852" failures="0" errors="0" skipped="0" timestamp="2014-07-26T23:01:49+02:00">
-  <testcase name="orawls::fmw CentOS remote extract SOA Suite file2 should contain Exec[extract file2] with command =&gt; &quot;unzip -o /install/file2 -d /install/soa&quot; and creates =&gt; &quot;/install/soa/Disk4&quot;" time="0.003509">
-  </testcase>
-</testsuite>

@@ -18,7 +18,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     oim1admin.vm.network :private_network, ip: "10.10.10.61"
   
     oim1admin.vm.provider :virtualbox do |vb|
-      vb.customize ["modifyvm", :id, "--memory", "3548"]
+      vb.customize ["modifyvm", :id, "--memory", "5548"]
       vb.customize ["modifyvm", :id, "--name"  , "oim1admin"]
       vb.customize ["modifyvm", :id, "--cpus"  , 2]
     end

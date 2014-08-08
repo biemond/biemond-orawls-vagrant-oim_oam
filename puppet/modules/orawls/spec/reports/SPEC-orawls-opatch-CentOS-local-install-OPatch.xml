@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="orawls::opatch CentOS local install OPatch" tests="1" time="0.003629" failures="0" errors="0" skipped="0" timestamp="2014-07-26T23:01:50+02:00">
-  <testcase name="orawls::opatch CentOS local install OPatch should contain Opatch[17584181] with ensure =&gt; &quot;present&quot;, oracle_product_home_dir =&gt; &quot;/opt/oracle/middleware11g/Oracle_SOA1&quot;, os_user =&gt; &quot;oracle&quot;, orainst_dir =&gt; &quot;/etc&quot;, jdk_home_dir =&gt; &quot;/usr/java/jdk1.7.0_45&quot; and extracted_patch_dir =&gt; &quot;/install/17584181&quot;" time="0.003236">
-  </testcase>
-</testsuite>

@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="orawls::fmw Windows" tests="1" time="0.128287" failures="0" errors="0" skipped="0" timestamp="2014-07-26T23:01:49+02:00">
-  <testcase name="orawls::fmw Windows should contain File[/install/test_silent_dummy.rsp]" time="0.128001">
-  </testcase>
-</testsuite>

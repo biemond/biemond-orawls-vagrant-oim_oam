@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="orawls::fmw CentOS remote for SOA Suite file2" tests="1" time="0.0044" failures="0" errors="0" skipped="0" timestamp="2014-07-26T23:01:49+02:00">
-  <testcase name="orawls::fmw CentOS remote for SOA Suite file2 should contain File[/install/file2] with source =&gt; &quot;/mnt/file2&quot;" time="0.003996">
-  </testcase>
-</testsuite>

@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="orawls::opatch CentOS remote extract patch" tests="1" time="0.005351" failures="0" errors="0" skipped="0" timestamp="2014-07-26T23:01:49+02:00">
-  <testcase name="orawls::opatch CentOS remote extract patch should contain Exec[extract opatch p17584181_111170_Generic.zip 17584181] with command =&gt; &quot;unzip -n /install/p17584181_111170_Generic.zip -d /install&quot;" time="0.004842">
-  </testcase>
-</testsuite>

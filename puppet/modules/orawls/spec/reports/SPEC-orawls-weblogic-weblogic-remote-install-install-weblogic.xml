@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="orawls::weblogic weblogic remote install install weblogic" tests="1" time="0.0243" failures="0" errors="0" skipped="0" timestamp="2014-07-26T23:01:48+02:00">
-  <testcase name="orawls::weblogic weblogic remote install install weblogic should contain Exec[install weblogic 1036] with command =&gt; &quot;java  -Xmx1024m -Djava.io.tmpdir=/data -jar /install/wls1036_generic.jar -Djava.io.tmpdir=/data -mode=silent -silent_xml=/install/weblogic_silent_install.xml&quot; and environment =&gt; [&quot;JAVA_VENDOR=Sun&quot;, &quot;JAVA_HOME=/usr/java/jdk1.7.0_45&quot;]" time="0.023962">
-  </testcase>
-</testsuite>

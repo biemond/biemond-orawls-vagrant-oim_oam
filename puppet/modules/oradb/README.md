@@ -1,4 +1,4 @@
-#Oracle Database Linux puppet module
+#Oracle Database puppet module
 [![Build Status](https://travis-ci.org/biemond/biemond-oradb.png)](https://travis-ci.org/biemond/biemond-oradb)
 
 created by Edwin Biemond
@@ -17,7 +17,9 @@ Example of Opensource Puppet 3.4.3 Puppet master configuration in a vagrant box 
 Should work for Puppet 2.7 & 3.0
 
 ##Version updates
-
+- 1.0.14 Rename some internal manifest to avoid a conflict with orawls
+- 1.0.13 Oracle Database & Client 12.1.0.2 Support
+- 1.0.11 database client fix with remote file, set DBSNMPPASSWORD on a database
 - 1.0.10 oraInst.loc bug fix, option to skip installdb bash profile
 - 1.0.9 11.2 EE install options
 - 1.0.8 RCU & Opatch fixes in combination with ruby 1.9.3
@@ -35,11 +37,9 @@ Should work for Puppet 2.7 & 3.0
 ##Oracle Database Features
 
 - Oracle Grid 11.2.0.4 Linux / Solaris installation
-- Oracle Database 12.1.0.1 Linux / Solaris installation
-- Oracle Database 11.2.0.4 Linux / Solaris installation
-- Oracle Database 11.2.0.3 Linux / Solaris installation
-- Oracle Database 11.2.0.1 Linux / Solaris installation
-- Oracle Database Client 12.1.0.1,11.2.0.4,11.2.0.1 Linux / Solaris installation
+- Oracle Database 12.1.0.1,12.1.0.2 Linux / Solaris installation
+- Oracle Database 11.2.0.1,11.2.0.3,11.2.0.4 Linux / Solaris installation
+- Oracle Database Client 12.1.0.1,12.1.0.2,11.2.0.4,11.2.0.1 Linux / Solaris installation
 - Oracle Database Net configuration
 - Oracle Database Listener
 - Oracle ASM
@@ -69,80 +69,12 @@ else you can use $source =>
 - "puppet:///modules/oradb/" (default)
 - "puppet:///database/"  
 
-when the files are also accesiable locally then you can also set $remote_file => false this will not move the files to the download folder, just extract or install 
-
-##Files
------
-- 11.2.0.1 Download oracle database linux software from http://otn.oracle.com
-- 11.2.0.3 Download oracle database linux software from http://support.oracle.com
-- Patch 10404530: 11.2.0.3.0 PATCH SET FOR ORACLE DATABASE SERVER
-- 11.2.0.4 Download oracle database linux software from http://support.oracle.com
-- 12.1.0.1 Download oracle database linux software from http://otn.oracle.com
-
-optional upload these files to the files folder of the oradb puppet module
-
-
-##database files of linux 12.1.0.1 ( otn.oracle.com )
-- 1361028723 Jun 27 23:38 linuxamd64_12c_database_1of2.zip
-- 1116527103 Jun 27 23:38 linuxamd64_12c_database_2of2.zip
-
-###database files of linux 11.2.0.3 ( support.oracle.com )
-- 1358454646 Mar  9 17:31 p10404530_112030_Linux-x86-64_1of7.zip
-- 1142195302 Mar  9 17:47 p10404530_112030_Linux-x86-64_2of7.zip
-
-###grid
--  979195792 Mar  9 18:01 p10404530_112030_Linux-x86-64_3of7.zip
-
-###client
--  659229728 Mar  9 18:11 p10404530_112030_Linux-x86-64_4of7.zip
-
-##database files of linux 11.2.0.4 ( support.oracle.com )
-- 1395582860 Aug 31 16:21 p13390677_112040_Linux-x86-64_1of7.zip
-- 1151304589 Aug 31 16:22 p13390677_112040_Linux-x86-64_2of7.zip
-
-###grid 
-- 1205251894 Aug 31 16:22 p13390677_112040_Linux-x86-64_3of7.zip
-
-###client
--  656026876 Aug 31 16:22 p13390677_112040_Linux-x86-64_4of7.zip
-
-##database files of linux 11.2.0.1 ( otn.oracle.com )
-- 1239269270 Mar 10 17:05 linux.x64_11gR2_database_1of2.zip
-- 1111416131 Mar 10 17:17 linux.x64_11gR2_database_2of2.zip
-
-##opatch database patch for 11.2.0.3
-- 25556377 Mar 10 12:48 p14727310_112030_Linux-x86-64.zip
-
-##opatch upgrade
-- 32551984 Jul  6 18:58 p6880880_112000_Linux-x86-64.zip
-
-##database client linux  ( otn.oracle.com )
-- linux.x64_11gR2_client.zip ( version 11.2.0.1 )
-- linuxamd64_12c_client.zip  ( version 12.1.0.1 )
-
-##rcu linux installer
-- 408989041 Mar 17 20:17 ofm_rcu_linux_11.1.1.6.0_disk1_1of1.zip
-- 411498103 Apr  1 21:23 ofm_rcu_linux_11.1.1.7.0_32_disk1_1of1.zip
-
-##goldengate for Oracle 11g & Oracle 12c
-- 121200_fbo_ggs_Linux_x64_shiphome.zip
-- ogg112101_fbo_ggs_Linux_x64_ora11g_64bit.zip
-- V38714-01.zip
-
-important support node
-[ID 1441282.1] Requirements for Installing Oracle 11gR2 RDBMS on RHEL6 or OL6 64-bit (x86-64)
-
+when the files are also locally accessible then you can also set $remote_file => false this will not move the files to the download folder, just extract or install 
 
 ##Oracle Database Facter
 Contains Oracle Facter which displays the following
 - Oracle Software
 - Opatch patches
-
-### Example of the Oracle Database Facts
-
-    oradb_inst_loc_data /oracle/oraInventory
-    oradb_inst_patches_oracle_product_11.2_db Patches;14727310;
-    oradb_inst_products /oracle/product/11.2/db;
 
 ##templates.pp
 
@@ -155,9 +87,9 @@ The databaseType value should contain only one of these choices.
 
     $puppetDownloadMntPoint = "puppet:///modules/oradb/"
     
-    oradb::installdb{ '12.1.0.1_Linux-x86-64':
-      version                => '12.1.0.1',
-      file                   => 'linuxamd64_12c_database',
+    oradb::installdb{ '12.1.0.2_Linux-x86-64':
+      version                => '12.1.0.2',
+      file                   => 'V46095-01',
       databaseType           => 'SE',
       oracleBase             => '/oracle',
       oracleHome             => '/oracle/product/12.1/db',

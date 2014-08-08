@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="orawls::nodemanager CentOS 11g log dir change logdir" tests="1" time="0.005105" failures="0" errors="0" skipped="0" timestamp="2014-07-26T23:01:49+02:00">
-  <testcase name="orawls::nodemanager CentOS 11g log dir change logdir should contain File[/var/log/weblogic] with ensure =&gt; &quot;directory&quot;, owner =&gt; &quot;oracle&quot; and group =&gt; &quot;dba&quot;" time="0.004728">
-  </testcase>
-</testsuite>
