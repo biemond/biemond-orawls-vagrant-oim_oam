@@ -76,7 +76,7 @@ class os {
   $install = [ 'binutils.x86_64','unzip.x86_64',
                'xorg-x11-xauth.x86_64','compat-libcap1.x86_64',
                'compat-libstdc++-33.x86_64','libaio-devel.x86_64',
-               'glibc.x86_64','libgcc.x86_64', 'libstdc++.x86_64', 
+               'glibc.x86_64','libgcc.x86_64', 'libstdc++.x86_64',
                'make.x86_64', 'gcc.x86_64',
                'gcc-c++.x86_64','glibc-devel.x86_64',
                'libstdc++-devel.x86_64','sysstat.x86_64','glibc.i686']
@@ -130,9 +130,9 @@ class java {
   include jdk7
 
   jdk7::install7{ 'jdk1.7.0_51':
-      version                   => "7u51" , 
+      version                   => "7u51" ,
       fullVersion               => "jdk1.7.0_51",
-      alternativesPriority      => 18000, 
+      alternativesPriority      => 18000,
       x64                       => true,
       downloadDir               => "/var/tmp/install",
       urandomJavaFix            => true,
@@ -172,6 +172,7 @@ class domains{
 
   $domain_address = hiera('domain_adminserver_address')
   $domain_port    = hiera('domain_adminserver_port')
+  $version        = hiera('wls_version')
 
   $version = hiera('wls_version')
   orautils::nodemanagerautostart{"autostart weblogic 11g":
@@ -207,11 +208,11 @@ class startwls {
 }
 
 class userconfig{
-  require orawls::weblogic, domains, nodemanager, startwls 
+  require orawls::weblogic, domains, nodemanager, startwls
   $default_params = {}
   $userconfig_instances = hiera('userconfig_instances', {})
   create_resources('orawls::storeuserconfig',$userconfig_instances, $default_params)
-} 
+}
 
 class machines{
   require userconfig
@@ -267,7 +268,7 @@ class fmw_log_dir {
   $default_params = {}
   $fmwlogdir_instances = hiera('fmwlogdir_instances', {})
   create_resources('orawls::fmwlogdir',$fmwlogdir_instances, $default_params)
-}  
+}
 
 class fmw_webtier {
   require fmw_log_dir

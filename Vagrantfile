@@ -16,28 +16,28 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     oim1admin.vm.synced_folder "/Users/edwin/software", "/software"
 
     oim1admin.vm.network :private_network, ip: "10.10.10.61"
-  
+
     oim1admin.vm.provider :virtualbox do |vb|
       vb.customize ["modifyvm", :id, "--memory", "5548"]
       vb.customize ["modifyvm", :id, "--name"  , "oim1admin"]
       vb.customize ["modifyvm", :id, "--cpus"  , 2]
     end
-  
+
     oim1admin.vm.provision :shell, :inline => "ln -sf /vagrant/puppet/hiera.yaml /etc/puppet/hiera.yaml;rm -rf /etc/puppet/modules;ln -sf /vagrant/puppet/modules /etc/puppet/modules"
-    
+
     oim1admin.vm.provision :puppet do |puppet|
       puppet.manifests_path    = "puppet/manifests"
       puppet.module_path       = "puppet/modules"
       puppet.manifest_file     = "site.pp"
       puppet.options           = "--verbose --hiera_config /vagrant/puppet/hiera.yaml"
-  
+
       puppet.facter = {
         "environment"    => "development",
         "vm_type"        => "vagrant",
       }
-      
+
     end
-  
+
   end
 
   config.vm.define "oimoud" , primary: true do |oimoud|
@@ -50,28 +50,28 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     oimoud.vm.synced_folder "/Users/edwin/software", "/software"
 
     oimoud.vm.network :private_network, ip: "10.10.10.71"
-  
+
     oimoud.vm.provider :virtualbox do |vb|
       vb.customize ["modifyvm", :id, "--memory", "2048"]
       vb.customize ["modifyvm", :id, "--name"  , "oimoud"]
       vb.customize ["modifyvm", :id, "--cpus"  , 1]
     end
-  
+
     oimoud.vm.provision :shell, :inline => "ln -sf /vagrant/puppet/hiera.yaml /etc/puppet/hiera.yaml;rm -rf /etc/puppet/modules;ln -sf /vagrant/puppet/modules /etc/puppet/modules"
-    
+
     oimoud.vm.provision :puppet do |puppet|
       puppet.manifests_path    = "puppet/manifests"
       puppet.module_path       = "puppet/modules"
       puppet.manifest_file     = "site.pp"
       puppet.options           = "--verbose --hiera_config /vagrant/puppet/hiera.yaml"
-  
+
       puppet.facter = {
         "environment"   => "development",
         "vm_type"       => "vagrant",
       }
-      
+
     end
-  
+
   end
 
   config.vm.define "oimdb" , primary: true do |oimdb|
@@ -83,29 +83,29 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     oimdb.vm.synced_folder "/Users/edwin/software", "/software"
 
     oimdb.vm.network :private_network, ip: "10.10.10.9"
-  
+
     oimdb.vm.provider :virtualbox do |vb|
       vb.customize ["modifyvm"     , :id, "--memory", "2532"]
       vb.customize ["modifyvm"     , :id, "--name"  , "oimdb"]
       vb.customize ["modifyvm"     , :id, "--cpus"  , 2]
     end
 
-  
+
     oimdb.vm.provision :shell, :inline => "ln -sf /vagrant/puppet/hiera.yaml /etc/puppet/hiera.yaml;rm -rf /etc/puppet/modules;ln -sf /vagrant/puppet/modules /etc/puppet/modules"
-    
+
     oimdb.vm.provision :puppet do |puppet|
       puppet.manifests_path    = "puppet/manifests"
       puppet.module_path       = "puppet/modules"
       puppet.manifest_file     = "db.pp"
       puppet.options           = "--verbose --hiera_config /vagrant/puppet/hiera.yaml"
-  
+
       puppet.facter = {
         "environment" => "development",
         "vm_type"     => "vagrant",
       }
-      
+
     end
-  
+
   end
 
 end
