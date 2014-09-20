@@ -174,9 +174,9 @@ class domains{
   $domain_port    = hiera('domain_adminserver_port')
   $version        = hiera('wls_version')
 
-  $version = hiera('wls_version')
+  $wls_version = hiera('wls_version')
   orautils::nodemanagerautostart{"autostart weblogic 11g":
-    version     => "${version}",
+    version     => "${wls_version}",
     wlHome      => hiera('wls_weblogic_home_dir'),
     user        => hiera('wls_os_user'),
     jsseEnabled => true,
