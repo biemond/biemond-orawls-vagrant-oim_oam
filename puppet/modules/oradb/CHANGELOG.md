@@ -1,7 +1,26 @@
 # Version updates
 
+## 1.0.21
+- fix for windows/unix linefeed when oradb is used in combination with vagrant on a windows host
+
+## 1.0.20
+- Create a Database instance based on a template
+- Be able to change the default listener port 1521 in net.pp & database.pp
+- Opatch fix to apply same the patch twice on different oracle homes
+
+## 1.0.19
+- OPatch support for clusterware (GRID)
+- Opatchupgrade now works for grid & database on the same node
+
+## 1.0.18
+- Puppet Lint fixes
+- Rubocop fixes
+- 12.1 Template fix for Oracle RAC
+
 ## 1.0.17
 - Fix for puppet 3.7 and more strict parsing
+- OPatch also checks for OPatch succeeded
+- RAC installation parameters for database, installasm, installdb
 
 ## 1.0.16
 - cleanup readme

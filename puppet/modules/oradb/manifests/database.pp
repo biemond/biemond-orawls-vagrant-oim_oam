@@ -12,8 +12,10 @@ define oradb::database(
   $group                    = 'dba',
   $downloadDir              = '/install',
   $action                   = 'create',
+  $template                 = undef,
   $dbName                   = 'orcl',
   $dbDomain                 = undef,
+  $dbPort                   = '1521',
   $sysPassword              = 'Welcome01',
   $systemPassword           = 'Welcome01',
   $dataFileDestination      = undef,
@@ -31,6 +33,7 @@ define oradb::database(
   $dbSnmpPassword           = 'Welcome01',
   $asmDiskgroup             = 'DATA',
   $recoveryDiskgroup        = undef,
+  $cluster_nodes            = undef,
 ){
   if (!( $version in ['11.2','12.1'])) {
     fail('Unrecognized version')
@@ -63,22 +66,6 @@ define oradb::database(
       'Linux', 'SunOS': {
         $execPath    = "${oracleHome}/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:"
         $path        = $downloadDir
-
-        Exec {
-          path        => $execPath,
-          user        => $user,
-          group       => $group,
-          environment => ["USER=${user}",],
-          logoutput   => true,
-        }
-
-        File {
-          ensure     => present,
-          mode       => '0775',
-          owner      => $user,
-          group      => $group,
-        }
-
       }
       default: {
         fail('Unrecognized operating system')
@@ -90,31 +77,60 @@ define oradb::database(
     $filename = "${path}/database_${sanitized_title}.rsp"
 
     if $dbDomain {
-        $globalDbName = "${dbName}.${dbDomain}"
+      $globalDbName = "${dbName}.${dbDomain}"
     } else {
-        $globalDbName = $dbName
+      $globalDbName = $dbName
     }
 
     if ! defined(File[$filename]) {
       file { $filename:
-        ensure       => present,
-        content      => template("oradb/dbca_${version}.rsp.erb"),
+        ensure  => present,
+        content => template("oradb/dbca_${version}.rsp.erb"),
+        mode    => '0775',
+        owner   => $user,
+        group   => $group,
+        before  => Exec["oracle database ${title}"],
+      }
+    }
+
+    if ( $template ) {
+      $templatename = "${path}/${template}_${sanitized_title}.dbt"
+      file { $templatename:
+        ensure  => present,
+        content => template("oradb/${template}.dbt.erb"),
+        mode    => '0775',
+        owner   => $user,
+        group   => $group,
+        before  => Exec["oracle database ${title}"],
       }
     }
 
     if $action == 'create' {
-      exec { "install oracle database ${title}":
-        command      => "dbca -silent -responseFile ${filename}",
-        require      => File[$filename],
-        creates      => "${oracleBase}/admin/${dbName}",
-        timeout      => 0,
+      if ( $template ) {
+        $command = "dbca -silent -createDatabase -templateName ${templatename} -gdbname ${globalDbName} -responseFile NO_VALUE -sysPassword ${sysPassword} -systemPassword ${systemPassword}"
+      } else {
+        $command = "dbca -silent -responseFile ${filename}"
+      }
+      exec { "oracle database ${title}":
+        command     => $command,
+        creates     => "${oracleBase}/admin/${dbName}",
+        timeout     => 0,
+        path        => $execPath,
+        user        => $user,
+        group       => $group,
+        environment => ["USER=${user}",],
+        logoutput   => true,
       }
     } elsif $action == 'delete' {
-      exec { "delete oracle database ${title}":
-        command      => "dbca -silent -responseFile ${filename}",
-        require      => File[$filename],
-        onlyif       => "ls ${oracleBase}/admin/${dbName}",
-        timeout      => 0,
+      exec { "oracle database ${title}":
+        command     => "dbca -silent -responseFile ${filename}",
+        onlyif      => "ls ${oracleBase}/admin/${dbName}",
+        timeout     => 0,
+        path        => $execPath,
+        user        => $user,
+        group       => $group,
+        environment => ["USER=${user}",],
+        logoutput   => true,
       }
     }
   }
