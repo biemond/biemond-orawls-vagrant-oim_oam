@@ -8,12 +8,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "oim1admin" , primary: true do |oim1admin|
 
-    oim1admin.vm.box = "centos-6.5-x86_64"
-    oim1admin.vm.box_url = "https://dl.dropboxusercontent.com/s/np39xdpw05wfmv4/centos-6.5-x86_64.box"
+    oim1admin.vm.box = "OEL6_6"
+    #oim1admin.vm.box_url = "https://dl.dropboxusercontent.com/s/np39xdpw05wfmv4/centos-6.5-x86_64.box"
 
     oim1admin.vm.hostname = "oim1admin.example.com"
     oim1admin.vm.synced_folder ".", "/vagrant", :mount_options => ["dmode=777","fmode=777"]
-    oim1admin.vm.synced_folder "/Users/edwin/software", "/software"
+    oim1admin.vm.synced_folder "/Users/turing/Downloads/Software/Oracle/swdepot", "/software"
 
     oim1admin.vm.network :private_network, ip: "10.10.10.61"
 
@@ -42,12 +42,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "oimoud" , primary: true do |oimoud|
 
-    oimoud.vm.box = "centos-6.5-x86_64"
-    oimoud.vm.box_url = "https://dl.dropboxusercontent.com/s/np39xdpw05wfmv4/centos-6.5-x86_64.box"
+    oimoud.vm.box = "OEL6_6"
+    #oimoud.vm.box_url = "https://dl.dropboxusercontent.com/s/np39xdpw05wfmv4/centos-6.5-x86_64.box"
 
     oimoud.vm.hostname = "oimoud.example.com"
     oimoud.vm.synced_folder ".", "/vagrant", :mount_options => ["dmode=777","fmode=777"]
-    oimoud.vm.synced_folder "/Users/edwin/software", "/software"
+    oimoud.vm.synced_folder "/Users/turing/Downloads/Software/Oracle/swdepot", "/software"
 
     oimoud.vm.network :private_network, ip: "10.10.10.71"
 
@@ -75,12 +75,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.define "oimdb" , primary: true do |oimdb|
-    oimdb.vm.box = "centos-6.5-x86_64"
-    oimdb.vm.box_url = "https://dl.dropboxusercontent.com/s/np39xdpw05wfmv4/centos-6.5-x86_64.box"
+    oimdb.vm.box = "OEL6_6"
+    #oimdb.vm.box_url = "https://dl.dropboxusercontent.com/s/np39xdpw05wfmv4/centos-6.5-x86_64.box"
 
     oimdb.vm.hostname = "oimdb.example.com"
     oimdb.vm.synced_folder ".", "/vagrant", :mount_options => ["dmode=777","fmode=777"]
-    oimdb.vm.synced_folder "/Users/edwin/software", "/software"
+    oimdb.vm.synced_folder "/Users/turing/Downloads/Software/Oracle/swdepot", "/software"
 
     oimdb.vm.network :private_network, ip: "10.10.10.9"
 
