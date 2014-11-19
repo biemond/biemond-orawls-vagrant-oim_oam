@@ -54,7 +54,7 @@ bsu_instances:
 #    log_output:              true
 #    remote_file:             false
   'FSR2':
-    patch_id:                "T5F1"
+    patch_id:                "FSR2"
     patch_file:              "p19182814_1036_Generic.zip"
     log_output:              true
     remote_file:             false
