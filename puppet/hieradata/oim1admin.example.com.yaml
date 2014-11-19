@@ -42,10 +42,16 @@ fmw_installations:
     remote_file:             false
 
 opatch_instances:
-  '17584181':
+# this patch has been superceded by the one below
+#  '17584181':
+#     oracle_product_home_dir:  "/opt/oracle/middleware11g/Oracle_SOA1"
+#     patch_id:                 "17584181"
+#     patch_file:               "p17584181_111170_Generic.zip"
+#     remote_file:              false
+  '18072286':
      oracle_product_home_dir:  "/opt/oracle/middleware11g/Oracle_SOA1"
-     patch_id:                 "17584181"
-     patch_file:               "p17584181_111170_Generic.zip"
+     patch_id:                 "18072286"
+     patch_file:               "p18072286_111170_Generic.zip"
      remote_file:              false
 
 

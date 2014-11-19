@@ -47,9 +47,15 @@ orawls::weblogic::remote_file:          false
 
 # patches for WebLogic 10.3.6
 bsu_instances:
-  'T5F1':
+# this patch has been superceded by the one below
+#  'T5F1':
+#    patch_id:                "T5F1"
+#    patch_file:              "p18040640_1036_Generic.zip"
+#    log_output:              true
+#    remote_file:             false
+  'FSR2':
     patch_id:                "T5F1"
-    patch_file:              "p18040640_1036_Generic.zip"
+    patch_file:              "p19182814_1036_Generic.zip"
     log_output:              true
     remote_file:             false
 
