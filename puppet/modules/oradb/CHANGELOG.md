@@ -1,7 +1,22 @@
 # Version updates
 
+## 1.0.27
+- solaris fix for database.pp and opatch auto
+
+## 1.0.26
+- Removed createUser functionality in installdb & client, Puppet should do it instead of oradb module
+- Support for 12.1 pluggable database
+- initParams of database.pp now also support a hash besides a comma separated string
+- Refactored dbstructure so it works with multiple oracle homes
+- Goldengate 12.1.2 now uses dbstructure
+
 ## 1.0.25
 - added extra parameter validation to installdb, installasm and installem_agent
+- opatch fix for opatch bundle zip files which has subfolders in the zip
+- owner of the grid home or oracle home folder fix
+- renamed clusterware parameter of the opatch type to opatch_auto
+- StorageType parameter is now also used in the dbca command when using a database template
+- Added ASM 11.2 Database template
 
 ## 1.0.24
 - Enterprise Manager agent install with AgentPull & AgentDeploy

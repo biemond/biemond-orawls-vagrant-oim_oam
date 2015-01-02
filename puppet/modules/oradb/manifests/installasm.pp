@@ -79,33 +79,28 @@ define oradb::installasm(
     }
   }
 
+  if $oraInventoryDir == undef {
+    $oraInventory = "${gridBase}/oraInventory"
+  } else {
+    $oraInventory = "${oraInventoryDir}/oraInventory"
+  }
+
+  oradb::utils::dbstructure{"grid structure ${version}":
+    oracle_base_home_dir => $gridBase,
+    ora_inventory_dir    => $oraInventory,
+    os_user              => $user,
+    os_group_install     => $group_install,
+    download_dir         => $downloadDir,
+  }
+
   if ( $continue ) {
 
     $execPath     = '/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:'
-
-    if $oraInventoryDir == undef {
-      $oraInventory = "${gridBase}/oraInventory"
-    } else {
-      $oraInventory = "${oraInventoryDir}/oraInventory"
-    }
 
     if $puppetDownloadMntPoint == undef {
       $mountPoint     = 'puppet:///modules/oradb/'
     } else {
       $mountPoint     = $puppetDownloadMntPoint
-    }
-
-    oradb::utils::dbstructure{"grid structure ${version}":
-      oracle_base_home_dir => $gridBase,
-      ora_inventory_dir    => $oraInventory,
-      os_user              => $user,
-      os_group             => $group,
-      os_group_install     => $group_install,
-      os_group_oper        => $group_oper,
-      download_dir         => $downloadDir,
-      log_output           => true,
-      user_base_dir        => $userBaseDir,
-      create_user          => false,
     }
 
     if ( $zipExtract ) {
@@ -190,27 +185,18 @@ define oradb::installasm(
     }
 
     exec { "install oracle grid ${title}":
-      command   => "/bin/sh -c 'unset DISPLAY;${downloadDir}/${file_without_ext}/grid/runInstaller -silent -waitforcompletion -ignoreSysPrereqs -ignorePrereq -responseFile ${downloadDir}/grid_install_${version}.rsp'",
-      creates   => $gridHome,
-      timeout   => 0,
-      returns   => [6,0],
-      path      => $execPath,
-      user      => $user,
-      group     => $group_install,
-      cwd       => $gridBase,
-      logoutput => true,
-      require   => [Oradb::Utils::Dborainst["grid orainst ${version}"],
-                    File["${downloadDir}/grid_install_${version}.rsp"]],
-    }
-
-    file { $gridHome:
-      ensure  => directory,
-      recurse => false,
-      replace => false,
-      mode    => '0775',
-      owner   => $user,
-      group   => $group_install,
-      require => Exec["install oracle grid ${title}"],
+      command     => "/bin/sh -c 'unset DISPLAY;${downloadDir}/${file_without_ext}/grid/runInstaller -silent -waitforcompletion -ignoreSysPrereqs -ignorePrereq -responseFile ${downloadDir}/grid_install_${version}.rsp'",
+      creates     => $gridHome,
+      environment => ["USER=${user}","LOGNAME=${user}"],
+      timeout     => 0,
+      returns     => [6,0],
+      path        => $execPath,
+      user        => $user,
+      group       => $group_install,
+      cwd         => $gridBase,
+      logoutput   => true,
+      require     => [Oradb::Utils::Dborainst["grid orainst ${version}"],
+                      File["${downloadDir}/grid_install_${version}.rsp"]],
     }
 
     if ! defined(File["${userBaseDir}/${user}/.bash_profile"]) {
@@ -234,6 +220,16 @@ define oradb::installasm(
       cwd       => $gridBase,
       logoutput => true,
       require   => Exec["install oracle grid ${title}"],
+    }
+
+    file { $gridHome:
+      ensure  => directory,
+      recurse => false,
+      replace => false,
+      mode    => '0775',
+      owner   => $user,
+      group   => $group_install,
+      require => Exec["install oracle grid ${title}","run root.sh grid script ${title}"],
     }
 
     # cleanup
@@ -275,7 +271,7 @@ define oradb::installasm(
         path      => $execPath,
         cwd       => $gridBase,
         logoutput => true,
-        require   => Exec["run root.sh grid script ${title}"],
+        require   => [Exec["run root.sh grid script ${title}"],File[$gridHome],],
       }
     } else {
       file { "${downloadDir}/cfgrsp.properties":
@@ -284,7 +280,7 @@ define oradb::installasm(
         mode    => '0600',
         owner   => $user,
         group   => $group,
-        require => Exec["run root.sh grid script ${title}"],
+        require => [Exec["run root.sh grid script ${title}"],File[$gridHome],],
       }
 
       exec { "run configToolAllCommands grid tool ${title}":

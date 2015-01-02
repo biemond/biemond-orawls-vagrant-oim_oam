@@ -43,29 +43,24 @@ define oradb::installem_agent(
     }
   }
 
+  if $ora_inventory_dir == undef {
+    $oraInventory = "${oracle_base_dir}/oraInventory"
+  } else {
+    $oraInventory = "${ora_inventory_dir}/oraInventory"
+  }
+
+  # setup oracle base with the right permissions
+  oradb::utils::dbstructure{"oracle em agent structure ${version}":
+    oracle_base_home_dir => $oracle_base_dir,
+    ora_inventory_dir    => $oraInventory,
+    os_user              => $user,
+    os_group_install     => $group,
+    download_dir         => $download_dir,
+  }
+
   if ( $continue ) {
 
     $execPath = '/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:'
-
-    if $ora_inventory_dir == undef {
-      $oraInventory = "${oracle_base_dir}/oraInventory"
-    } else {
-      $oraInventory = "${ora_inventory_dir}/oraInventory"
-    }
-
-    # setup oracle base with the right permissions
-    oradb::utils::dbstructure{"oracle em agent structure ${version}":
-      oracle_base_home_dir => $oracle_base_dir,
-      ora_inventory_dir    => $oraInventory,
-      os_user              => $user,
-      os_group             => $group,
-      os_group_install     => undef,
-      os_group_oper        => undef,
-      download_dir         => $download_dir,
-      log_output           => $log_output,
-      user_base_dir        => undef,
-      create_user          => false,
-    }
 
     # check oraInst
     oradb::utils::dborainst{"em agent orainst ${version}":
@@ -152,7 +147,7 @@ define oradb::installem_agent(
         }
       }
 
-      exec { "extract ${download_dir}/${file1}":
+      exec { "extract ${source} ${title}":
         command   => "unzip -o ${source} -d ${download_dir}/em_agent_${version}",
         timeout   => 0,
         logoutput => false,
@@ -176,7 +171,7 @@ define oradb::installem_agent(
         path      => $execPath,
         user      => $user,
         group     => $group,
-        require   => [Exec["extract ${download_dir}/${file1}"],
+        require   => [Exec["extract ${source} ${title}"],
                       Oradb::Utils::Dbstructure["oracle em agent structure ${version}"],
                       Oradb::Utils::Dborainst["em agent orainst ${version}"],],
       }
