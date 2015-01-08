@@ -6,23 +6,18 @@ node 'oimdb.example.com'  {
 # operating settings for Database & Middleware
 class oradb_os {
 
-  exec { "create swap file":
-    command => "/bin/dd if=/dev/zero of=/var/swap.1 bs=1M count=8192",
-    creates => "/var/swap.1",
+  class { 'swap_file':
+    swapfile     => '/var/swap.1',
+    swapfilesize => '8192000000'
   }
 
-  exec { "attach swap file":
-    command => "/sbin/mkswap /var/swap.1 && /sbin/swapon /var/swap.1",
-    require => Exec["create swap file"],
-    unless => "/sbin/swapon -s | grep /var/swap.1",
-  }
-
-  #add swap file entry to fstab
-  exec {"add swapfile entry to fstab":
-    command => "/bin/echo >>/etc/fstab /var/swap.1 swap swap defaults 0 0",
-    require => Exec["attach swap file"],
-    user => root,
-    unless => "/bin/grep '^/var/swap.1' /etc/fstab 2>/dev/null",
+  # set the tmpfs
+  mount { '/dev/shm':
+    ensure      => present,
+    atboot      => true,
+    device      => 'tmpfs',
+    fstype      => 'tmpfs',
+    options     => 'size=2000m',
   }
 
   $host_instances = hiera('hosts', {})
