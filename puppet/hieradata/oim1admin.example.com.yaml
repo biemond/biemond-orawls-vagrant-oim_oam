@@ -17,29 +17,41 @@ logoutput:                     &logoutput                     true
 
 # FMW installation on top of WebLogic 10.3.6
 fmw_installations:
-  'oim11.1.2.2':
+  'oim11.1.2.3':
     fmw_product:             "oim"
-    fmw_file1:               "ofm_iam_generic_11.1.2.2.0_disk1_1of2.zip"
-    fmw_file2:               "ofm_iam_generic_11.1.2.2.0_disk1_2of2.zip"
+#    fmw_file1:               "ofm_iam_generic_11.1.2.2.0_disk1_1of2.zip"
+#    fmw_file2:               "ofm_iam_generic_11.1.2.2.0_disk1_2of2.zip"
+    fmw_file1:               "p20996201_111230_Generic_1of3.zip"
+    fmw_file2:               "p20996201_111230_Generic_2of3.zip"
+    fmw_file3:               "p20996201_111230_Generic_3of3.zip"
     log_output:              true
     remote_file:             false
-  'webGate11.1.2.2':
-    version:                 1112
+  'webGate11.1.2.3':
+    version:                 11123
     fmw_product:             "webgate"
-    fmw_file1:               "ofm_webgates_generic_11.1.2.2.0_disk1_1of1.zip"
+    fmw_file1:               "ofm_webgates_generic_11.1.2.3.0_disk1_1of1.zip"
     log_output:              true
     remote_file:             false
-  'webTierPS6':
+  'webTier11119':
     fmw_product:             "web"
-    fmw_file1:               "ofm_webtier_linux_11.1.1.7.0_64_disk1_1of1.zip"
+    fmw_file1:               "ofm_webtier_linux_11.1.1.9.0_64_disk1_1of1.zip"
     log_output:              true
     remote_file:             false
-  'soaPS6':
+#  'soaPS6':
+#    fmw_product:             "soa"
+#    fmw_file1:               "ofm_soa_generic_11.1.1.7.0_disk1_1of2.zip"
+#    fmw_file2:               "ofm_soa_generic_11.1.1.7.0_disk1_2of2.zip"
+#    log_output:              true
+#    remote_file:             false
+  'soaPS7':
     fmw_product:             "soa"
-    fmw_file1:               "ofm_soa_generic_11.1.1.7.0_disk1_1of2.zip"
-    fmw_file2:               "ofm_soa_generic_11.1.1.7.0_disk1_2of2.zip"
+#    fmw_file1:               "ofm_soa_generic_11.1.1.9.0_disk1_1of2.zip"
+#    fmw_file2:               "ofm_soa_generic_11.1.1.9.0_disk1_2of2.zip"
+    fmw_file1:               "V75849-01_1of2.zip"
+    fmw_file2:               "V75849-01_2of2.zip"
     log_output:              true
     remote_file:             false
+
 
 opatch_instances:
 # this patch has been superceded by the one below
@@ -48,11 +60,11 @@ opatch_instances:
 #     patch_id:                 "17584181"
 #     patch_file:               "p17584181_111170_Generic.zip"
 #     remote_file:              false
-  '18072286':
-     oracle_product_home_dir:  "/opt/oracle/middleware11g/Oracle_SOA1"
-     patch_id:                 "18072286"
-     patch_file:               "p18072286_111170_Generic.zip"
-     remote_file:              false
+#  '18072286':
+#     oracle_product_home_dir:  "/opt/oracle/middleware11g/Oracle_SOA1"
+#     patch_id:                 "18072286"
+#     patch_file:               "p18072286_111170_Generic.zip"
+#     remote_file:              false
 
 
 
@@ -111,6 +123,13 @@ control_managed_instances:
      server:               'oim_server1'
      action:               'start'
      log_output:           *logoutput
+  'startWLSOamServer':
+     domain_name:          "oimDomain"
+     server_type:          'managed'
+     target:               'Server'
+     server:               'oam_server1'
+     action:               'start'
+     log_output:           *logoutput
 
 fmwlogdir_instances:
   'AdminServer':
@@ -143,6 +162,8 @@ oimconfig_instances:
     design_config:              false
     oimserver_hostname:         'oim1admin.example.com'
     oimserver_port:             '14000'
+    oamserver_hostname:         'oim1admin.example.com'
+    oamserver_port:             '14100'
     repository_database_url:    "oimdb.example.com:1521:oimrepos.example.com"
     repository_prefix:          "DEV"
     repository_password:        "Welcome01"
@@ -150,7 +171,11 @@ oimconfig_instances:
 webtier_instances:
   'ohs1':
     action_name:           'create'
-    webgate_configure:     true
     instance_name:         'ohs1'
+    webgate_configure:     true
+    webgate_agentname:     'ohs1'
+    webgate_hostidentifier: 'host1'
+    oamadminserverhostname: 'oim1admin.example.com'
+    oamadminserverport:    '7001'
     log_output:            *logoutput
 

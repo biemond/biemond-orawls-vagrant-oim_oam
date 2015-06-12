@@ -185,9 +185,9 @@ class oradb_11g {
     }
 
     oradb::rcu{  'DEV_RCU':
-      rcuFile                => 'ofm_rcu_linux_11.1.2.2.0_64_disk1_1of1.zip',
+      rcuFile                => 'ofm_rcu_linux_11.1.1.9.0_64_disk1_1of1.zip',
       product                => hiera('repository_type'),
-      version                => '11.1.2.2',
+      version                => '11.1.1.9',
       user                   => hiera('oracle_os_user'),
       group                  => hiera('oracle_os_group'),
       downloadDir            => hiera('oracle_download_dir'),
