@@ -129,9 +129,9 @@ class java {
 
   include jdk7
 
-  jdk7::install7{ 'jdk1.7.0_71':
-      version                   => "7u71" ,
-      fullVersion               => "jdk1.7.0_71",
+  jdk7::install7{ 'jdk1.7.0_80':
+      version                   => "7u80" ,
+      fullVersion               => "jdk1.7.0_80",
       alternativesPriority      => 18000,
       x64                       => true,
       downloadDir               => "/var/tmp/install",
