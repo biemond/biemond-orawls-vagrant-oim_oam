@@ -13,7 +13,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     oim1admin.vm.hostname = "oim1admin.example.com"
     oim1admin.vm.synced_folder ".", "/vagrant", :mount_options => ["dmode=777","fmode=777"]
-    oim1admin.vm.synced_folder "/Users/turing/Downloads/Software/Oracle/swdepot", "/software"
+    oim1admin.vm.synced_folder "/Users/cmj/Downloads/Software/Oracle/swdepot", "/software"
 
     oim1admin.vm.network :private_network, ip: "10.10.10.61"
 
@@ -47,7 +47,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     oimoud.vm.hostname = "oimoud.example.com"
     oimoud.vm.synced_folder ".", "/vagrant", :mount_options => ["dmode=777","fmode=777"]
-    oimoud.vm.synced_folder "/Users/turing/Downloads/Software/Oracle/swdepot", "/software"
+    oimoud.vm.synced_folder "/Users/cmj/Downloads/Software/Oracle/swdepot", "/software"
 
     oimoud.vm.network :private_network, ip: "10.10.10.71"
 
@@ -80,7 +80,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     oimdb.vm.hostname = "oimdb.example.com"
     oimdb.vm.synced_folder ".", "/vagrant", :mount_options => ["dmode=777","fmode=777"]
-    oimdb.vm.synced_folder "/Users/turing/Downloads/Software/Oracle/swdepot", "/software"
+    oimdb.vm.synced_folder "/Users/cmj/Downloads/Software/Oracle/swdepot", "/software"
 
     oimdb.vm.network :private_network, ip: "10.10.10.9"
 
