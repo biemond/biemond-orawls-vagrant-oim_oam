@@ -39,7 +39,7 @@ fmw_installations:
     log_output:              true
     remote_file:             false
   'webGate11.1.2.3':
-    version:                 1112
+    version:                 11123
     fmw_product:             "webgate"
     fmw_file1:               "ofm_webgates_generic_11.1.2.3.0_disk1_1of1.zip"
     log_output:              true
@@ -57,13 +57,6 @@ fmw_installations:
     remote_file:             false
 
 opatch_instances:
-  # '17584181':
-  #    oracle_product_home_dir:  "/opt/oracle/middleware11g/Oracle_SOA1"
-  #    patch_id:                 "17584181"
-  #    patch_file:               "p17584181_111170_Generic.zip"
-  #    remote_file:              false
-
-
 
 # when you have just one domain on a server
 domain_name:                *domain_name
@@ -106,27 +99,27 @@ control_instances:
      log_output:           *logoutput
 
 control_managed_instances:
-  # 'startWLSSoaServer':
-  #    domain_name:          *domain_name
-  #    server_type:          'managed'
-  #    target:               'Server'
-  #    server:               'soa_server1'
-  #    action:               'start'
-  #    log_output:           *logoutput
-  # 'startWLSOimServer':
-  #    domain_name:          *domain_name
-  #    server_type:          'managed'
-  #    target:               'Server'
-  #    server:               'oim_server1'
-  #    action:               'start'
-  #    log_output:           *logoutput
-  # 'startWLSOamServer':
-  #    domain_name:          *domain_name
-  #    server_type:          'managed'
-  #    target:               'Server'
-  #    server:               'oam_server1'
-  #    action:               'start'
-  #    log_output:           *logoutput
+  'startWLSSoaServer':
+     domain_name:          *domain_name
+     server_type:          'managed'
+     target:               'Server'
+     server:               'soa_server1'
+     action:               'start'
+     log_output:           *logoutput
+  'startWLSOimServer':
+     domain_name:          *domain_name
+     server_type:          'managed'
+     target:               'Server'
+     server:               'oim_server1'
+     action:               'start'
+     log_output:           *logoutput
+  'startWLSOamServer':
+     domain_name:          *domain_name
+     server_type:          'managed'
+     target:               'Server'
+     server:               'oam_server1'
+     action:               'start'
+     log_output:           *logoutput
 
 fmwlogdir_instances:
   'AdminServer':
@@ -149,21 +142,21 @@ userconfig_instances:
      user_config_dir:      '/home/oracle'
 
 oimconfig_instances:
-  # 'oimDomain':
-  #   version:                    1112
-  #   oim_home:                   '/opt/oracle/middleware11g/Oracle_IDM1'
-  #   server_config:              true
-  #   oim_password:               'Welcome01'
-  #   remote_config:              false
-  #   keystore_password:          'Welcome01'
-  #   design_config:              false
-  #   oimserver_hostname:         'oim1admin.example.com'
-  #   oimserver_port:             '14000'
-  #   oamserver_hostname:         'oim1admin.example.com'
-  #   oamserver_port:             '14100'
-  #   repository_database_url:    "oimdb.example.com:1521:oimrepos.example.com"
-  #   repository_prefix:          "DEV"
-  #   repository_password:        "Welcome01"
+  'oimDomain':
+    version:                    1112
+    oim_home:                   '/opt/oracle/middleware11g/Oracle_IDM1'
+    server_config:              true
+    oim_password:               'Welcome01'
+    remote_config:              false
+    keystore_password:          'Welcome01'
+    design_config:              false
+    oimserver_hostname:         'oim1admin.example.com'
+    oimserver_port:             '14000'
+    oamserver_hostname:         'oim1admin.example.com'
+    oamserver_port:             '14100'
+    repository_database_url:    "oimdb.example.com:1521:oimrepos.example.com"
+    repository_prefix:          "DEV"
+    repository_password:        "Welcome01"
 
 webtier_instances:
   # 'ohs1':

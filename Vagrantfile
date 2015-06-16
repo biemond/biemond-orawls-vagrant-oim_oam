@@ -24,11 +24,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     oim1admin.vm.provider :vmware_fusion do |vb|
       vb.vmx["numvcpus"] = "2"
-      vb.vmx["memsize"] = "2548"
+      vb.vmx["memsize"] = "5548"
     end
 
     oim1admin.vm.provider :virtualbox do |vb|
-      vb.customize ["modifyvm", :id, "--memory", "2548"]
+      vb.customize ["modifyvm", :id, "--memory", "5548"]
       vb.customize ["modifyvm", :id, "--name"  , "oim1admin"]
       vb.customize ["modifyvm", :id, "--cpus"  , 2]
     end
