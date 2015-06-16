@@ -8,10 +8,10 @@ oracle_home_dir:          '/oracle/product/11.2/db'
 oracle_os_user:           "oracle"
 oracle_os_group:          "dba"
 oracle_download_dir:      "/var/tmp/install"
-oracle_source:            "/software"
+oracle_source:            "/vagrant"
 
 oracle_database_name:         'oimrepos'
-oracle_database_domain_name:  'example.com'  
+oracle_database_domain_name:  'example.com'
 oracle_database_service_name: 'oimrepos.example.com'
 oracle_database_host:         'oimdb.example.com:1521'
 

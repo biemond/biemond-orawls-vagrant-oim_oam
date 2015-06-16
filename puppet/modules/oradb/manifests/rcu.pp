@@ -1,23 +1,7 @@
 # == Class: oradb::rcu
 #    rcu for soa suite, webcenter
 #
-#    product = soasuite|webcenter|oim|all
-#
-#    oradb::rcu{ 'DEV_PS6':
-#                rcuFile        => 'ofm_rcu_linux_11.1.1.7.0_32_disk1_1of1.zip',
-#                version        => '11.1.1.7',
-#                oracleHome     => '/oracle/product/11.2/db',
-#                product        => 'all',
-#                user           => 'oracle',
-#                group          => 'dba',
-#                downloadDir    => '/install',
-#                action         => 'create',
-#                dbServer       => 'dbagent1.alfa.local:1521',
-#                dbService      => 'test.oracle.com',
-#                sysPassword    => 'Welcome01',
-#                schemaPrefix   => 'DEV',
-#                reposPassword  => 'Welcome02',
-#    }
+#    product = soasuite|webcenter|oim|oam|all
 #
 #
 define oradb::rcu(
@@ -31,6 +15,7 @@ define oradb::rcu(
   $action                  = 'create',  # delete or create
   $dbServer                = undef,
   $dbService               = undef,
+  $sysUser                 = 'sys',
   $sysPassword             = undef,
   $schemaPrefix            = undef,
   $reposPassword           = undef,
@@ -65,7 +50,6 @@ define oradb::rcu(
       mode    => '0775',
       owner   => $user,
       group   => $group,
-      require => File[$downloadDir],
     }
   }
 
@@ -118,9 +102,12 @@ define oradb::rcu(
     $components           = '-component MDS -component OPSS -component CONTENTSERVER11 -component CONTENTSERVER11SEARCH -component URM -component PORTLET -component WEBCENTER -component ACTIVITIES -component DISCUSSIONS'
     # extra password for DISCUSSIONS and ACTIVITIES
     $componentsPasswords  = [$reposPassword, $reposPassword, $reposPassword, $reposPassword, $reposPassword, $reposPassword, $reposPassword, $reposPassword, $reposPassword, $reposPassword, $reposPassword]
+  } elsif $product == 'oam' {
+    $components           = '-component MDS -component OPSS -component IAU -component OAM'
+    $componentsPasswords  = [$reposPassword, $reposPassword, $reposPassword, $reposPassword, $reposPassword]
   } elsif $product == 'oim' {
-    $components           = '-component SOAINFRA -component ORASDPM -component MDS -component OPSS -component BAM -component IAU -component OIF -component OIM -component OAM -component OAAM'
-    $componentsPasswords  = [$reposPassword, $reposPassword, $reposPassword,$reposPassword,$reposPassword,$reposPassword, $reposPassword, $reposPassword,$reposPassword, $reposPassword]
+    $components           = '-component SOAINFRA -component ORASDPM -component MDS -component OPSS -component BAM -component IAU -component BIPLATFORM -component OIF -component OIM -component OAM -component OAAM'
+    $componentsPasswords  = [$reposPassword, $reposPassword, $reposPassword,$reposPassword,$reposPassword,$reposPassword, $reposPassword, $reposPassword,$reposPassword, $reposPassword, $reposPassword]
   } elsif $product == 'all' {
     $components           = '-component SOAINFRA -component ORASDPM -component MDS -component OPSS -component BAM -component CONTENTSERVER11 -component CONTENTSERVER11SEARCH -component URM -component PORTLET -component WEBCENTER -component ACTIVITIES -component DISCUSSIONS'
     # extra password for DISCUSSIONS and ACTIVITIES
@@ -143,7 +130,7 @@ define oradb::rcu(
   } else {
     $preCommand    = "${downloadDir}/rcu_${version}/rcuHome/bin/rcu -silent"
   }
-  $postCommand     = "-databaseType ORACLE -connectString ${dbServer}:${dbService} -dbUser SYS -dbRole SYSDBA -schemaPrefix ${schemaPrefix} ${components} "
+  $postCommand     = "-databaseType ORACLE -connectString ${dbServer}:${dbService} -dbUser ${sysUser} -dbRole SYSDBA -schemaPrefix ${schemaPrefix} ${components} "
   $passwordCommand = " -f < ${downloadDir}/rcu_${version}/rcu_passwords_${title}.txt"
 
   #optional set the Temp tablespace
@@ -166,6 +153,7 @@ define oradb::rcu(
     statement    => $statement,
     os_user      => $user,
     oracle_home  => $oracleHome,
+    sys_user     => $sysUser,
     sys_password => $sysPassword,
     db_server    => $dbServer,
     db_service   => $dbService,

@@ -4,7 +4,7 @@ orawls::weblogic::log_output:   true
 
 orautils::osDomainTypeParam:      "oud"
 orautils::osDomainParam:          "oudDomain"
-orautils::osDomainPathParam:      "/opt/oracle/middleware11g/user_projects/domains/oudDomain"
+orautils::osDomainPathParam:      "/opt/oracle/wlsdomains/domains/oudDomain"
 orautils::nodeMgrPathParam:       "/opt/oracle/middleware11g/wlserver_10.3/server/bin"
 
 orautils::nodeMgrPortParam:       5556
@@ -19,13 +19,13 @@ logoutput:                     &logoutput                     true
 fmw_installations:
   'adfPS7':
     fmw_product:             "adf"
-    fmw_file1:               "ofm_appdev_generic_11.1.1.7.0_disk1_1of1.zip"
+    fmw_file1:               "V75962-01.zip"
     log_output:              true
     remote_file:             false
-  'oud11.1.2.2':
+  'oud11.1.2.3':
     version:                 1112
     fmw_product:             "oud"
-    fmw_file1:               "ofm_oud_generic_11.1.2.2.0_disk1_1of1.zip"
+    fmw_file1:               "ofm_oud_generic_11.1.2.3.0_disk1_1of1.zip"
     log_output:              true
     remote_file:             false
 
@@ -84,7 +84,7 @@ oudconfig_instances:
 
 oud_control_instances:
   'instance1':
-    oud_instances_home_dir:     '/opt/oracle/oud_instances' 
+    oud_instances_home_dir:     '/opt/oracle/oud_instances'
     oud_instance_name:          'instance1'
     action:                     'start'
     log_output:                 *logoutput

@@ -23,13 +23,16 @@ wls_version:              &wls_version              1036
 wls_os_user:              &wls_os_user              "oracle"
 wls_os_group:             &wls_os_group             "dba"
 wls_download_dir:         &wls_download_dir         "/var/tmp/install"
-wls_source:               &wls_source               "/software"
+wls_source:               &wls_source               "/vagrant"
 wls_jdk_home_dir:         &wls_jdk_home_dir         "/usr/java/latest"
 wls_log_dir:              &wls_log_dir              "/var/log/weblogic"
 
+wls_domains_dir:          &wls_domains_dir          '/opt/oracle/wlsdomains/domains'
+wls_apps_dir:             &wls_apps_dir             '/opt/oracle/wlsdomains/applications'
+
 wls_jsse_enabled:         true
 
-#WebLogic installation variables 
+#WebLogic installation variables
 orawls::weblogic::version:              *wls_version
 orawls::weblogic::filename:             "wls1036_generic.jar"
 
@@ -45,11 +48,15 @@ orawls::weblogic::download_dir:         *wls_download_dir
 orawls::weblogic::source:               *wls_source
 orawls::weblogic::remote_file:          false
 
+orawls::weblogic::wls_domains_dir:      *wls_domains_dir
+orawls::weblogic::wls_apps_dir:         *wls_apps_dir
+
+
 # patches for WebLogic 10.3.6
 bsu_instances:
-  'T5F1':
-    patch_id:                "T5F1"
-    patch_file:              "p18040640_1036_Generic.zip"
+  'YUIS':
+    patch_id:                "YUIS"
+    patch_file:              "p20181997_1036_Generic.zip"
     log_output:              true
     remote_file:             false
 

@@ -19,6 +19,7 @@ define orawls::utils::fmwcluster (
   $osb_cluster_name           = undef,
   $oam_cluster_name           = undef,
   $oim_cluster_name           = undef,
+  $ess_cluster_name           = undef,
   $bpm_enabled                = false, # true|false
   $bam_enabled                = false, # true|false
   $osb_enabled                = false, # true|false
@@ -34,6 +35,7 @@ define orawls::utils::fmwcluster (
   $os_group                   = hiera('wls_os_group'), # dba
   $download_dir               = hiera('wls_download_dir'), # /data/install
   $log_output                 = false, # true|false
+  $retain_file_store          = hiera('retain_security_file_store', false), # true|false
 )
 {
   if ( $wls_domains_dir == undef or $wls_domains_dir == '') {
@@ -168,7 +170,7 @@ define orawls::utils::fmwcluster (
       }
 
       # only for soa suite 1036 or 1111 and not if OAM is already installed
-      if ( $soa_enabled  == true and $oam_enabled == false) {
+      if ( $soa_enabled  == true and $oam_enabled == false and $retain_file_store == false) {
         # the domain.py used by the wlst
         file { "migrateSecurityStore.py ${domain_name} ${title}":
           ensure  => present,

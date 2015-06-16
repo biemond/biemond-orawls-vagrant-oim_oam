@@ -124,16 +124,16 @@ class java {
 
   include jdk7
 
-  jdk7::install7{ 'jdk1.7.0_51':
-      version                   => "7u51" ,
-      fullVersion               => "jdk1.7.0_51",
+  jdk7::install7{ 'jdk1.7.0_80':
+      version                   => "7u80" ,
+      fullVersion               => "jdk1.7.0_80",
       alternativesPriority      => 18000,
       x64                       => true,
       downloadDir               => "/var/tmp/install",
       urandomJavaFix            => true,
       rsakeySizeFix             => true,
       cryptographyExtensionFile => "UnlimitedJCEPolicyJDK7.zip",
-      sourcePath                => "/software",
+      sourcePath                => "/vagrant",
   }
 
 }

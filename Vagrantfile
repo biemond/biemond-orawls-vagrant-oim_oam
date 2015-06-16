@@ -8,17 +8,27 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "oim1admin" , primary: true do |oim1admin|
 
-    oim1admin.vm.box = "centos-6.5-x86_64"
-    oim1admin.vm.box_url = "https://dl.dropboxusercontent.com/s/np39xdpw05wfmv4/centos-6.5-x86_64.box"
+    oim1admin.vm.box = "OEL6_6"
+    oim1admin.vm.box_url = "https://dl.dropboxusercontent.com/s/6h3sdpab3sd50u8/OEL6_6.box"
+
+    oim1admin.vm.provider :vmware_fusion do |v, override|
+      override.vm.box = "OEL-6.6-x86_64-vmware"
+      override.vm.box_url = "https://dl.dropboxusercontent.com/s/96qaaklh1ya6qnd/OEL6_6-x86_64-vmware.box"
+    end
 
     oim1admin.vm.hostname = "oim1admin.example.com"
+
     oim1admin.vm.synced_folder ".", "/vagrant", :mount_options => ["dmode=777","fmode=777"]
-    oim1admin.vm.synced_folder "/Users/edwin/software", "/software"
 
     oim1admin.vm.network :private_network, ip: "10.10.10.61"
 
+    oim1admin.vm.provider :vmware_fusion do |vb|
+      vb.vmx["numvcpus"] = "2"
+      vb.vmx["memsize"] = "2548"
+    end
+
     oim1admin.vm.provider :virtualbox do |vb|
-      vb.customize ["modifyvm", :id, "--memory", "5548"]
+      vb.customize ["modifyvm", :id, "--memory", "2548"]
       vb.customize ["modifyvm", :id, "--name"  , "oim1admin"]
       vb.customize ["modifyvm", :id, "--cpus"  , 2]
     end
@@ -42,14 +52,23 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "oimoud" , primary: true do |oimoud|
 
-    oimoud.vm.box = "centos-6.5-x86_64"
-    oimoud.vm.box_url = "https://dl.dropboxusercontent.com/s/np39xdpw05wfmv4/centos-6.5-x86_64.box"
+    oimoud.vm.box = "OEL6_6"
+    oimoud.vm.box_url = "https://dl.dropboxusercontent.com/s/6h3sdpab3sd50u8/OEL6_6.box"
+
+    oimoud.vm.provider :vmware_fusion do |v, override|
+      override.vm.box = "OEL-6.6-x86_64-vmware"
+      override.vm.box_url = "https://dl.dropboxusercontent.com/s/96qaaklh1ya6qnd/OEL6_6-x86_64-vmware.box"
+    end
 
     oimoud.vm.hostname = "oimoud.example.com"
     oimoud.vm.synced_folder ".", "/vagrant", :mount_options => ["dmode=777","fmode=777"]
-    oimoud.vm.synced_folder "/Users/edwin/software", "/software"
 
     oimoud.vm.network :private_network, ip: "10.10.10.71"
+
+    oimoud.vm.provider :vmware_fusion do |vb|
+      vb.vmx["numvcpus"] = "2"
+      vb.vmx["memsize"] = "2048"
+    end
 
     oimoud.vm.provider :virtualbox do |vb|
       vb.customize ["modifyvm", :id, "--memory", "2048"]
@@ -75,14 +94,24 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.define "oimdb" , primary: true do |oimdb|
-    oimdb.vm.box = "centos-6.5-x86_64"
-    oimdb.vm.box_url = "https://dl.dropboxusercontent.com/s/np39xdpw05wfmv4/centos-6.5-x86_64.box"
+
+    oimdb.vm.box = "OEL6_6"
+    oimdb.vm.box_url = "https://dl.dropboxusercontent.com/s/6h3sdpab3sd50u8/OEL6_6.box"
+
+    oimdb.vm.provider :vmware_fusion do |v, override|
+      override.vm.box = "OEL-6.6-x86_64-vmware"
+      override.vm.box_url = "https://dl.dropboxusercontent.com/s/96qaaklh1ya6qnd/OEL6_6-x86_64-vmware.box"
+    end
 
     oimdb.vm.hostname = "oimdb.example.com"
     oimdb.vm.synced_folder ".", "/vagrant", :mount_options => ["dmode=777","fmode=777"]
-    oimdb.vm.synced_folder "/Users/edwin/software", "/software"
 
     oimdb.vm.network :private_network, ip: "10.10.10.9"
+
+    oimdb.vm.provider :vmware_fusion do |vb|
+      vb.vmx["numvcpus"] = "2"
+      vb.vmx["memsize"] = "2532"
+    end
 
     oimdb.vm.provider :virtualbox do |vb|
       vb.customize ["modifyvm"     , :id, "--memory", "2532"]
