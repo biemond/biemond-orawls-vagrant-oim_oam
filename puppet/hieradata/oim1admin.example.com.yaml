@@ -159,12 +159,12 @@ oimconfig_instances:
     repository_password:        "Welcome01"
 
 webtier_instances:
-  # 'ohs1':
-  #   action_name:            'create'
-  #   instance_name:          'ohs1'
-  #   webgate_configure:      true
-  #   webgate_agentname:      'ohs1'
-  #   webgate_hostidentifier: 'host1'
-  #   oamadminserverhostname: 'oim1admin.example.com'
-  #   oamadminserverport:     '7001'
-  #   log_output:             *logoutput
+  'ohs1':
+    action_name:            'create'
+    instance_name:          'ohs1'
+    webgate_configure:      true
+    webgate_agentname:      'ohs1'
+    webgate_hostidentifier: 'host1'
+    oamadminserverhostname: 'oim1admin.example.com'
+    oamadminserverport:     '7001'
+    log_output:             *logoutput

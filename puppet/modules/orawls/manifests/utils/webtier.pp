@@ -117,10 +117,10 @@ define orawls::utils::webtier(
 
       file { "${middleware_home_dir}/Oracle_IDM1/oam/server/rreg/bin/oamreg.sh":
         ensure => file,
-        mode   => 700,
+        mode   => '0700',
       }
 
-    # in the real world rreg wouldn't be run on the host running the WebTier bits
+      # in the real world rreg wouldn't be run on the host running the WebTier bits
       exec { "Run rreg for WebGate instance ${webgate_agentname}":
         #command     => "/bin/echo -e ${middleware_home_dir}/Oracle_IDM1/oam/server/rreg/bin/oamreg.sh inband input/${webgate_agentname}.xml",
         command     => "/bin/echo -e ${weblogic_user}\\\\n${weblogic_password}\\\\n|${middleware_home_dir}/Oracle_IDM1/oam/server/rreg/bin/oamreg.sh inband input/${webgate_agentname}.xml -noprompt",
@@ -132,32 +132,32 @@ define orawls::utils::webtier(
         group       => $os_group,
         logoutput   => $log_output,
         require     => [File["${middleware_home_dir}/Oracle_IDM1/oam/server/rreg/input/${webgate_agentname}.xml"],File["${middleware_home_dir}/Oracle_IDM1/oam/server/rreg/bin/oamreg.sh"]]
-    }
+      }
 
       exec { "Deploy webgate to ${instance_id}":
         command     => "${middleware_home_dir}/Oracle_OAMWebGate1/webgate/ohs/tools/deployWebGate/deployWebGateInstance.sh -w ${instance_id} -oh ${middleware_home_dir}/Oracle_OAMWebGate1",
         environment => "LD_LIBRARY_PATH='${middleware_home_dir}/Oracle_WT1/lib'",
         cwd         => "${middleware_home_dir}/Oracle_OAMWebGate1/webgate/ohs/tools/deployWebGate",
         creates     => "${instance_id}/webgate",
-    path        => $exec_path,
+        path        => $exec_path,
         user        => $os_user,
         group       => $os_group,
         logoutput   => $log_output,
         require     => [Exec["config webtier ${title}"],Exec["Run rreg for WebGate instance ${webgate_agentname}"],],
       }
 
-    # copy the output from rreg to the WebGate
-    # in the real world the rreg artifacts would:
-    # * be copied to this host during host provisioning
-    #   OR
-    # * would be stored on a fileserver accessible from this host
-    #   e.g. from puppet:
-    file { "Copy rreg artifacts for ${instance_id}":
-      path      => "${instance_id}/webgate/config",
-    source    => "${middleware_home_dir}/Oracle_IDM1/oam/server/rreg/output/${webgate_agentname}",
-    recurse   => true,
-        require   => [Exec["Deploy webgate to ${instance_id}"],Exec["Run rreg for WebGate instance ${webgate_agentname}"],],
-    }
+      # copy the output from rreg to the WebGate
+      # in the real world the rreg artifacts would:
+      # * be copied to this host during host provisioning
+      #   OR
+      # * would be stored on a fileserver accessible from this host
+      #   e.g. from puppet:
+      file { "Copy rreg artifacts for ${instance_id}":
+        path    => "${instance_id}/webgate/config",
+        source  => "${middleware_home_dir}/Oracle_IDM1/oam/server/rreg/output/${webgate_agentname}",
+        recurse => true,
+        require => [Exec["Deploy webgate to ${instance_id}"],Exec["Run rreg for WebGate instance ${webgate_agentname}"],],
+      }
 
       exec { "EditHttpConf to enable webgate ${title}":
         command     => "${middleware_home_dir}/Oracle_OAMWebGate1/webgate/ohs/tools/setup/InstallTools/EditHttpConf -w ${instance_id} -oh ${middleware_home_dir}/Oracle_OAMWebGate1",
@@ -172,27 +172,24 @@ define orawls::utils::webtier(
         require     => [Exec["Deploy webgate to ${instance_id}"],File["Copy rreg artifacts for ${instance_id}"],],
       }
 
-    # after enabling a WebGate you need to bounce OHS
-    exec { "Stop OHS instance ${title}":
-        command     => "/bin/sh -c 'unset DISPLAY;${middleware_home_dir}/Oracle_WT1/instances/${instance_name}/bin/opmnctl stopall'",
-        path        => $exec_path,
-        user        => $os_user,
-        group       => $os_group,
-        logoutput   => $log_output,
-        require     => Exec["EditHttpConf to enable webgate ${title}"],
+      # after enabling a WebGate you need to bounce OHS
+      exec { "Stop OHS instance ${title}":
+        command   => "/bin/sh -c 'unset DISPLAY;${middleware_home_dir}/Oracle_WT1/instances/${instance_name}/bin/opmnctl stopall'",
+        path      => $exec_path,
+        user      => $os_user,
+        group     => $os_group,
+        logoutput => $log_output,
+        require   => Exec["EditHttpConf to enable webgate ${title}"],
       }
 
-    exec { "Start OHS instance ${title}":
-        command     => "/bin/sh -c 'unset DISPLAY;${middleware_home_dir}/Oracle_WT1/instances/${instance_name}/bin/opmnctl startall'",
-        path        => $exec_path,
-        user        => $os_user,
-        group       => $os_group,
-        logoutput   => $log_output,
-        require     => Exec["Stop OHS instance ${title}"],
+      exec { "Start OHS instance ${title}":
+        command   => "/bin/sh -c 'unset DISPLAY;${middleware_home_dir}/Oracle_WT1/instances/${instance_name}/bin/opmnctl startall'",
+        path      => $exec_path,
+        user      => $os_user,
+        group     => $os_group,
+        logoutput => $log_output,
+        require   => Exec["Stop OHS instance ${title}"],
       }
-
-
     }
-
   }
 }
