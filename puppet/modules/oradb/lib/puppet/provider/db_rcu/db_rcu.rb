@@ -1,6 +1,4 @@
-
 Puppet::Type.type(:db_rcu).provide(:db_rcu) do
-
   def self.instances
     []
   end
@@ -55,11 +53,11 @@ EOS
     FileUtils.chmod(0555, tmpFile.path)
 
     Puppet.debug "rcu for prefix #{prefix} execute SQL"
-    output = `su - #{user} -c 'export ORACLE_HOME=#{oracle_home};LD_LIBRARY_PATH=#{oracle_home}/lib;#{oracle_home}/bin/sqlplus \"#{sys_user}/#{sys_password}@//#{db_server}/#{db_service} as sysdba\" @#{tmpFile.path}'`
+    output = `su - #{user} -c 'export ORACLE_HOME=#{oracle_home};LD_LIBRARY_PATH=#{oracle_home}/lib #{oracle_home}/bin/sqlplus \"#{sys_user}/#{sys_password}@//#{db_server}/#{db_service} as sysdba\" @#{tmpFile.path}'`
     raise ArgumentError, "Error executing puppet code, #{output}" if $? != 0
 
     if FileTest.exists?("/tmp/check_rcu_#{prefix}2.txt")
-      File.open("/tmp/check_rcu_#{prefix}2.txt") do | outputfile|
+      File.open("/tmp/check_rcu_#{prefix}2.txt") do |outputfile|
         outputfile.each_line do |li|
           unless li.nil?
             Puppet.debug "line #{li}"
