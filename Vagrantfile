@@ -8,8 +8,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "oim1admin" , primary: true do |oim1admin|
 
-    oim1admin.vm.box = "OEL6_6"
-    oim1admin.vm.box_url = "https://dl.dropboxusercontent.com/s/6h3sdpab3sd50u8/OEL6_6.box"
+    oim1admin.vm.box = "OEL6_6-x86_64"
+    oim1admin.vm.box_url = "https://dl.dropboxusercontent.com/s/i247jykp2obw3ln/OEL6_6-x86_64.box"
 
     oim1admin.vm.provider :vmware_fusion do |v, override|
       override.vm.box = "OEL-6.6-x86_64-vmware"
@@ -52,8 +52,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "oimoud" , primary: true do |oimoud|
 
-    oimoud.vm.box = "OEL6_6"
-    oimoud.vm.box_url = "https://dl.dropboxusercontent.com/s/6h3sdpab3sd50u8/OEL6_6.box"
+    oimoud.vm.box = "OEL6_6-x86_64"
+    oimoud.vm.box_url = "https://dl.dropboxusercontent.com/s/i247jykp2obw3ln/OEL6_6-x86_64.box"
 
     oimoud.vm.provider :vmware_fusion do |v, override|
       override.vm.box = "OEL-6.6-x86_64-vmware"
@@ -95,8 +95,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "oimdb" , primary: true do |oimdb|
 
-    oimdb.vm.box = "OEL6_6"
-    oimdb.vm.box_url = "https://dl.dropboxusercontent.com/s/6h3sdpab3sd50u8/OEL6_6.box"
+    oimdb.vm.box = "OEL6_6-x86_64"
+    oimdb.vm.box_url = "https://dl.dropboxusercontent.com/s/i247jykp2obw3ln/OEL6_6-x86_64.box"
 
     oimdb.vm.provider :vmware_fusion do |v, override|
       override.vm.box = "OEL-6.6-x86_64-vmware"
