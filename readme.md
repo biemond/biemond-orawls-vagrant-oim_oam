@@ -1,5 +1,7 @@
 #OIM/OAM with WebTier/WebGate vagrant box
 
+Oracle access & identity manager 11.1.2.3
+
 ##Todo
 2.6.1 Registering the New Oracle HTTP Server 11g WebGate http://docs.oracle.com/cd/E40329_01/doc.1112/e49451/webgate_ohs.htm#autoId14
 
@@ -58,7 +60,14 @@ Vagrant boxes
 - V75849-01_1of2.zip soa suite 11.1.1.9.0 from edelivery
 - V75849-01_2of2.zip soa suite 11.1.1.9.0 from edelivery
 
-## OUD Middleware
+## OUD Middleware Oracle Unified Directory
+
+### url
+- http://10.10.10.71:7001/odsm/faces/odsm.jspx
+- Administration Connector 0.0.0.0 port 4444
+- LDAP Connection Handler 0.0.0.0 port 1389
+- LDAP Connection Handler 0.0.0.0 port 1636
+- home /opt/oracle/middleware11g/Oracle_OUD1/
 
 ### WebLogic Server
 - oimoud 10.10.10.71 port 7001 weblogic/weblogic1, WebLogic 10.3.6 with OUD

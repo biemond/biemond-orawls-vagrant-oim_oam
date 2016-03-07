@@ -33,12 +33,6 @@ fmw_installations:
     fmw_file3:               "ofm_iam_generic_11.1.2.3.0_disk1_3of3.zip"
     log_output:              true
     remote_file:             false
-  'webGate11.1.2.3':
-    version:                 11123
-    fmw_product:             "webgate"
-    fmw_file1:               "ofm_webgates_generic_11.1.2.3.0_disk1_1of1.zip"
-    log_output:              true
-    remote_file:             false
   'webTierPS7':
     fmw_product:             "web"
     fmw_file1:               "ofm_webtier_linux_11.1.1.9.0_64_disk1_1of1.zip"
@@ -50,6 +44,13 @@ fmw_installations:
     fmw_file2:               "V75849-01_2of2.zip"
     log_output:              true
     remote_file:             false
+  'webGate11.1.2.3':
+    version:                 11123
+    fmw_product:             "webgate"
+    fmw_file1:               "ofm_webgates_generic_11.1.2.3.0_disk1_1of1.zip"
+    log_output:              true
+    remote_file:             false
+    require:                 Orawls::Fmw[webTierPS7]
 
 opatch_instances:
 
