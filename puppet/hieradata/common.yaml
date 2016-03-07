@@ -24,6 +24,8 @@ wls_os_user:              &wls_os_user              "oracle"
 wls_os_group:             &wls_os_group             "dba"
 wls_download_dir:         &wls_download_dir         "/var/tmp/install"
 wls_source:               &wls_source               "/vagrant"
+# wls_source:               &wls_source               "/software"
+
 wls_jdk_home_dir:         &wls_jdk_home_dir         "/usr/java/latest"
 wls_log_dir:              &wls_log_dir              "/var/log/weblogic"
 
@@ -60,13 +62,18 @@ bsu_instances:
     log_output:              true
     remote_file:             false
 
+
 # handy WebLogic scripts in /opt/scripts/wls
-orautils::osOracleHomeParam:      *wls_oracle_base_home_dir
-orautils::oraInventoryParam:      "/opt/oracle/oraInventory"
-orautils::osLogFolderParam:       *wls_log_dir
-orautils::osDownloadFolderParam:  *wls_download_dir
-orautils::osMdwHomeParam:         *wls_middleware_home_dir
-orautils::osWlHomeParam:          *wls_weblogic_home_dir
-orautils::oraUserParam:           *wls_os_user
-orautils::jsseEnabledParam:       true
+orautils::os_oracle_home:      *wls_oracle_base_home_dir
+orautils::ora_inventory:       "/opt/oracle/oraInventory"
+orautils::os_log_folder:       *wls_log_dir
+orautils::os_download_folder:  *wls_download_dir
+orautils::os_mdw_home:         *wls_middleware_home_dir
+orautils::os_wl_home:          *wls_weblogic_home_dir
+orautils::ora_user:            *wls_os_user
+
+orautils::node_mgr_port:       5556
+
+orautils::wls_user:           *wls_weblogic_user
+orautils::jsse_enabled:       true
 

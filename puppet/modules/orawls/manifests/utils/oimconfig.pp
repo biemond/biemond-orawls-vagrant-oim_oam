@@ -12,11 +12,8 @@ define orawls::utils::oimconfig(
   $design_config              = false,
   $oimserver_hostname         = undef,
   $oimserver_port             = 14000,
-  $oamserver_hostname         = undef,
-  $oamserver_port             = 14100,
   $soaserver_name             = 'soa_server1',
   $oimserver_name             = 'oim_server1',
-  $oamserver_name             = 'oam_server1',
   $repository_database_url    = hiera('repository_database_url'   , undef), #jdbc:oracle:thin:@192.168.50.5:1521:XE
   $repository_prefix          = hiera('repository_prefix'         , 'DEV'),
   $repository_password        = hiera('repository_password'       , 'Welcome01'),

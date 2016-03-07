@@ -1,5 +1,23 @@
 # Version updates
 
+## 2.0.4
+- dbtemplate_12.1.dbt database template should also work for 12.1.0.2
+- db_structure fixes, correct permissions and chown order
+- support for Enterprise Manager 12.1.0.5
+
+## 2.0.3
+- some more strict file permissions
+- rcu allows now more complex passwords
+- allow to change the service name instead of dbora
+- installdb is_rack_one_install option for 12.1.0.2
+- db_control type & dbcontrol manifest supports now also Grid
+- security/permissions fixes with files which can contain passwords
+
+## 2.0.2
+- support the new opatchauto utility instead of opatch auto by use_opatchauto_utility => true
+- support 12.1 CDB with custom database template
+- changed the default oraInventory location when it is not defined
+
 ## 2.0.1
 - bash_profile option for database clients
 - rcu 11g fix

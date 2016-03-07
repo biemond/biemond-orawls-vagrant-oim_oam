@@ -14,18 +14,13 @@ domain_adminserver_port:    &domain_adminserver_port    7001
 domain_nodemanager_port:    &domain_nodemanager_port    5556
 domain_wls_password:        &domain_wls_password        "weblogic1"
 
-
-orautils::osDomainTypeParam:      "oim"
-orautils::osDomainParam:          *domain_name
-
-orautils::osDomainPathParam:      "/opt/oracle/wlsdomains/domains/oimDomain"
-orautils::nodeMgrPathParam:       "/opt/oracle/middleware11g/wlserver_10.3/server/bin"
-
-orautils::nodeMgrPortParam:       *domain_nodemanager_port
-orautils::nodeMgrAddressParam:    '10.10.10.61'
-orautils::wlsUserParam:           *wls_weblogic_user
-orautils::wlsPasswordParam:       *domain_wls_password
-orautils::wlsAdminServerParam:    *domain_adminserver
+orautils::os_domain_typeParam: "oim"
+orautils::os_domain:           *domain_name
+orautils::os_domain_path:      "/opt/oracle/wlsdomains/domains/oimDomain"
+orautils::node_mgr_path:       "/opt/oracle/middleware11g/wlserver_10.3/server/bin"
+orautils::node_mgr_address:    '10.10.10.61'
+orautils::wls_password:        *domain_wls_password
+orautils::wls_adminserver:     *domain_adminserver
 
 logoutput:                     &logoutput                     true
 
@@ -87,6 +82,18 @@ nodemanager_instances:
   'nodemanager':
      nodemanager_address:  "10.10.10.61"
      log_output:           *logoutput
+
+wls_setting_instances:
+  'default':
+    user:                         *wls_os_user
+    weblogic_home_dir:            *wls_weblogic_home_dir
+    connect_url:                  "t3://%{hiera('domain_adminserver_address')}:7001"
+    weblogic_user:                *wls_weblogic_user
+    weblogic_password:            *domain_wls_password
+    require:                      Orawls::Domain[oimDomain]
+    debug_module:                 true
+    archive_path:                 '/var/tmp/install/default_domain'
+    use_default_value_when_empty: true
 
 # startup adminserver for extra configuration
 control_instances:
@@ -152,8 +159,6 @@ oimconfig_instances:
     design_config:              false
     oimserver_hostname:         'oim1admin.example.com'
     oimserver_port:             '14000'
-    oamserver_hostname:         'oim1admin.example.com'
-    oamserver_port:             '14100'
     repository_database_url:    "oimdb.example.com:1521:oimrepos.example.com"
     repository_prefix:          "DEV"
     repository_password:        "Welcome01"

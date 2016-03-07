@@ -12,7 +12,7 @@
 
 Add the all the Oracle binaries to the vagrant folder or make links inside this folder
 
-edit Vagrantfile and update the software share
+Optional edit Vagrantfile and add the software share
 - oim1admin.vm.synced_folder "/Users/edwin/software", "/software"
 - oimdb.vm.synced_folder "/Users/edwin/software", "/software"
 - oimoud.vm.synced_folder "/Users/edwin/software", "/software"

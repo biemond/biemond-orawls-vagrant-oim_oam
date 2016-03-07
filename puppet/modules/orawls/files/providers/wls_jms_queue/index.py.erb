@@ -1,18 +1,16 @@
 
 
-def quote(text):
-    if text:
-        return "\"" + str(text).replace("\"", "\"\"") + "\""
-    else:
-        return ""
-
 def queue(token,token2,location,distributed):
     cd(location)
-    jndiname      = get('JNDIName')
+    jndiname           = get('JNDIName')
+    destination_keys   = get('DestinationKeys')
+    insertion_paused   = str(get('InsertionPausedAtStartup'))
+    consumption_paused = str(get('ConsumptionPausedAtStartup'))
+    production_paused  = str(get('ProductionPausedAtStartup'))
 
     forwardDelay = ''
     try:
-      forwardDelay = get('ForwardDelay')
+      forwardDelay = str(get('ForwardDelay'))
     except:
       print "forwardDelay failed, probably a normal queue"
 
@@ -21,7 +19,6 @@ def queue(token,token2,location,distributed):
        subdeployment = ''
     else:
        subdeployment = cmo.getSubDeploymentName()
-
 
     if distributed == '1':
       balancingPolicy  = get('LoadBalancingPolicy')
@@ -53,12 +50,21 @@ def queue(token,token2,location,distributed):
     cd(location+'/DeliveryParamsOverrides/'+token2)
     timeToLive      = get('TimeToLive')
     timeToDeliver   = get('TimeToDeliver')
+    deliveryMode    = get('DeliveryMode')
     redeliveryDelay = get('RedeliveryDelay')
 
-    print >>f, ";".join(map(quote, [domain+'/'+token+":"+token2,token,str(distributed),jndiname,subdeployment,balancingPolicy,quota,defaultTargeting,redeliveryLimit,expirationPolicy,errorDestination,expirationLoggingPolicy,timeToLive,timeToDeliver,redeliveryDelay,forwardDelay,domain]))
+    cd(location+'/MessageLoggingParams/'+token2)
+    messagelogging = get('MessageLoggingEnabled')
 
-f = open("/tmp/wlstScript.out", "w")
-print >>f, "name;jmsmodule;distributed;jndiname;subdeployment;balancingpolicy;quota;defaulttargeting;redeliverylimit;expirationpolicy;errordestination;expirationloggingpolicy;timetolive;timetodeliver;redeliverydelay;forwarddelay;domain"
+    template=ls(location+'/Template',returnMap='true')
+    if template:
+      templatename = template[0]
+    else:
+      templatename = ''
+
+    add_index_entry(f, [domain+'/'+token+":"+token2,token,str(distributed),jndiname,subdeployment,balancingPolicy,quota,defaultTargeting,redeliveryLimit,expirationPolicy,errorDestination,expirationLoggingPolicy,timeToLive,timeToDeliver,redeliveryDelay,deliveryMode,forwardDelay,templatename,messagelogging,domain,','.join(destination_keys), insertion_paused, consumption_paused, production_paused])
+
+f = open_file("name;jmsmodule;distributed;jndiname;subdeployment;balancingpolicy;quota;defaulttargeting;redeliverylimit;expirationpolicy;errordestination;expirationloggingpolicy;timetolive;timetodeliver;redeliverydelay;deliverymode;forwarddelay;templatename;messagelogging;domain;destination_keys;insertionpaused;consumptionpaused;productionpaused")
 
 m = ls('/JMSSystemResources',returnMap='true')
 for token in m:
@@ -76,4 +82,4 @@ for token in m:
 
 
 f.close()
-print "~~~~COMMAND SUCCESFULL~~~~"
+report_back_success()

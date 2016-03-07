@@ -2,16 +2,21 @@
 
 orawls::weblogic::log_output:   true
 
-orautils::osDomainTypeParam:      "oud"
-orautils::osDomainParam:          "oudDomain"
-orautils::osDomainPathParam:      "/opt/oracle/wlsdomains/domains/oudDomain"
-orautils::nodeMgrPathParam:       "/opt/oracle/middleware11g/wlserver_10.3/server/bin"
+wls_os_user:              &wls_os_user              "oracle"
+wls_weblogic_user:        &wls_weblogic_user        "weblogic"
+wls_weblogic_home_dir:    &wls_weblogic_home_dir    "/opt/oracle/middleware11g/wlserver_10.3"
+wls_middleware_home_dir:  &wls_middleware_home_dir  "/opt/oracle/middleware11g"
 
-orautils::nodeMgrPortParam:       5556
-orautils::nodeMgrAddressParam:    '10.10.10.71'
-orautils::wlsUserParam:           "weblogic"
-orautils::wlsPasswordParam:       "weblogic1"
-orautils::wlsAdminServerParam:    "AdminServer"
+orautils::os_domain_typeParam: "oud"
+orautils::os_domain:           "oudDomain"
+orautils::os_domain_path:      "/opt/oracle/wlsdomains/domains/oudDomain"
+orautils::node_mgr_path:       "/opt/oracle/middleware11g/wlserver_10.3/server/bin"
+orautils::node_mgr_address:    '10.10.10.71'
+orautils::wls_password:        "weblogic1"
+orautils::wls_adminserver:     "AdminServer"
+orautils::node_mgr_port:       5556
+orautils::wls_user:            "weblogic"
+
 
 logoutput:                     &logoutput                     true
 
@@ -47,6 +52,20 @@ domain_instances:
     domain_template:          "oud"
     development_mode:         true
     log_output:               *logoutput
+
+
+wls_setting_instances:
+  'default':
+    user:                         *wls_os_user
+    weblogic_home_dir:            *wls_weblogic_home_dir
+    connect_url:                  "t3://%{hiera('domain_adminserver_address')}:7001"
+    weblogic_user:                *wls_weblogic_user
+    weblogic_password:            "weblogic1"
+    require:                      Orawls::Domain[oudDomain]
+    debug_module:                 true
+    archive_path:                 '/var/tmp/install/default_domain'
+    use_default_value_when_empty: true
+
 
 # create and startup the nodemanager
 nodemanager_instances:

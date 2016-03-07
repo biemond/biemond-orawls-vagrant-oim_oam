@@ -9,6 +9,7 @@ oracle_os_user:           "oracle"
 oracle_os_group:          "dba"
 oracle_download_dir:      "/var/tmp/install"
 oracle_source:            "/vagrant"
+# oracle_source:            "/software"
 
 oracle_database_name:         'oimrepos'
 oracle_database_domain_name:  'example.com'
