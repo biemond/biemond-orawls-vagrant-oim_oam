@@ -36,8 +36,14 @@ Vagrant boxes
 
 ## OIM/OAM Middleware
 
-### WebLogic Server
+##Uris
 - oim1admin 10.10.10.61 port 7001 weblogic/weblogic1, WebLogic 10.3.6 with OIM,OAM,SOA Suite
+- http://10.10.10.61:14000/oim/faces/faces/pages/Admin.jspx with xelsysadm/Welcome01
+- http://10.10.10.61:14000/admin/faces/pages/Admin.jspx
+- http://10.10.10.61:8001/soa-infra with weblogic/weblogic1
+- http://10.10.10.61:8001/integration/worklistapp with weblogic/weblogic1
+- http://10.10.10.61:7001/oamconsole
+- http://10.10.10.61:9704/xmlpserver with xelsysadm/Welcome01
 
 ## Software
 
@@ -48,8 +54,8 @@ Vagrant boxes
 ### WebLogic
 - wls1036_generic.jar
 
-### BSU patch
-- p20181997_1036_Generic.zip
+#### BSU patch
+- S8C2 p21984589_1036_Generic.zip
 
 ### FMW
 - ofm_iam_generic_11.1.2.3.0_disk1_1of3.zip

@@ -56,9 +56,9 @@ orawls::weblogic::wls_apps_dir:         *wls_apps_dir
 
 # patches for WebLogic 10.3.6
 bsu_instances:
-  'YUIS':
-    patch_id:                "YUIS"
-    patch_file:              "p20181997_1036_Generic.zip"
+  'S8C2':
+    patch_id:                "S8C2"
+    patch_file:              "p21984589_1036_Generic.zip"
     log_output:              true
     remote_file:             false
 
